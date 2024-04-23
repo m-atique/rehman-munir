@@ -1,9 +1,11 @@
 'use client'
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import Bookingfilter from '@/components/ui/bookingfilter'
 import { Table } from '@/components/ui/table'
 import { columns } from './columns';
 import {DataTablewithFilters} from '@/components/ui/filtertable'
+import axios from 'axios';
+
 
 
 const Groups = () => {
@@ -65,6 +67,30 @@ const data = [
     fare: "23400",
   },
 ];
+const [ticketData,setTicketData] = useState()
+const getTickets =async(id)=>{
+  try{
+ 
+    const response = await axios.get(`/api/tickets/getTickets`)
+    if (response){
+      
+     
+      const data = response.data
+      console.log(data)
+
+      setTicketData(data)
+   } else {
+     alert("No user Found")
+   }
+   
+ }catch{
+   alert("No user Found")
+ }
+ }
+
+useEffect(()=>{
+  getTickets()
+},[])
   return (
     <main className=' bg-gradient-to-br from-blue-200   via-slate-300 bg-blue-200 flex flex-col items-center min-h-screen '>
        <div className="flex flex-row justify-around items-center  bg-slate-100 p-3 w-full">

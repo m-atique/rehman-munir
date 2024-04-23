@@ -3,9 +3,9 @@ import axios from 'axios'
 
 const getmaxid =async(table,id)=>{
 
-    const ids =  await axios.get(`/gen/maxId/${table}/${id}`)
+    const ids =  await axios.post('/api/general/maxid',{id:id,table:table})
    
-    return ids.data.maxId
+    return ids.data.maxid
      
     
   }

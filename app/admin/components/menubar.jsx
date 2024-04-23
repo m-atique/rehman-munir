@@ -56,7 +56,7 @@ import Image from "next/image";
 
     <MenubarItem> <TbCashBanknote className='mr-2'/><Link href ='/admin/deposite'>Manage Deposits</Link></MenubarItem>
 
-    <MenubarItem> <TbUser className='mr-2'/><Link href ='/admin/userform'>Manage Deposits</Link></MenubarItem>
+    <MenubarItem> <TbUser className='mr-2'/><Link href ='/admin/userform'>Create Users</Link></MenubarItem>
           
     </MenubarContent>
   </MenubarMenu>
@@ -74,8 +74,8 @@ import Image from "next/image";
   <MenubarMenu>
     
     <MenubarTrigger>
-      <Link href={'/'}>
-    <MdLogout size ={20} color={"purple"} title="Home" className='mr-2 '/>
+      <Link href={'/auth/signOut'}>
+    <MdLogout size ={20} color={"purple"} title="Logout" className='mr-2 '/>
       </Link>
     </MenubarTrigger>
   </MenubarMenu>

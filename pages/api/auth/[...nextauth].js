@@ -33,6 +33,7 @@ export const authOptions = {
   callbacks: {
     jwt({ token, user }) {
       if (user) {
+        token.id = user.id
         token.name = user.name;
         token.role = user.role;
         token.status = user.status;
@@ -40,6 +41,7 @@ export const authOptions = {
       return token;
     },
     session({ session, token }) {
+      session.user.id = token.id;
       session.user.role = token.role;
       session.user.name = token.name;
       session.user.status = token.status;

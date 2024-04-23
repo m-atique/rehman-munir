@@ -65,26 +65,20 @@ const Form = () => {
       status:"Active"
     }
 
-      axios.post(`/users/saveUser`, 
+      axios.post(`/api/users/saveUser`, 
       
   user
-      ,
-      {
-        headers:{
-          api_key:'A3166',
-          authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYXRlZXEiLCJyb2xlIjoiZGV2IiwibG9nbyI6ImRhc2Rld3E5In0sImlhdCI6MTcxMjM4MjQ2OCwiZXhwIjoxNzEyNDY4ODY4fQ.Xi7pseY8oppyE-lUd83uB6n9NK5qnFWAy4AOKtm-Pn4'
-        }          
-      }
+
       ).then( response =>{
-        console.log(response.data)
-        if(response.data == 'OK'){
+        
+        if(response.statusText == "OK"){
 
           alert("User Created Successfully")
 
-          setData(defaults)
+          reset()
         }
         else{
-          alert("user not saved ")
+          alert("User not saved ")
         }
   
       }
@@ -93,26 +87,30 @@ const Form = () => {
         }
 //----------------reset
         const reset = async()=>{ 
-          const response = await getmaxid("users","id")
-          console.log(response)
+          const response = await getmaxid('users',"id")
           setData({...defaults,srNo:response+1})
-      }
+      
+    }
 //-------------------get user
 const retriveData =async(id)=>{
-  console.log("id------",id)
-const response = await axios.get(`/users/getUser/${id}`,
-{
-  headers:{
-    api_key:'A3166',
-    authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYXRlZXEiLCJyb2xlIjoiZGV2IiwibG9nbyI6ImRhc2Rld3E5In0sImlhdCI6MTcxMjM4MjQ2OCwiZXhwIjoxNzEyNDY4ODY4fQ.Xi7pseY8oppyE-lUd83uB6n9NK5qnFWAy4AOKtm-Pn4'
-  }          
-})
-const user = response.data
-setData({...data,
-name:user.name,
-gmail:user.gmail,contact:user.contact,pwd:user.hash,pwd2:user.hash,address:user.address,co:user.co,logo:user.logo,showSave:'hidden',showUpdate:'block'
-})
+ try{
 
+   const response = await axios.get(`/api/users/userbyid/${id}`)
+   if (response){
+     
+    
+     const user = response.data[0]
+     setData({...data,
+      name:user.name,
+      gmail:user.gmail,contact:user.contact,pwd:user.hash,pwd2:user.hash,address:user.address,co:user.co,logo:user.logo,showSave:'hidden',showUpdate:'block'
+    })
+  } else {
+    alert("No user Found")
+  }
+  
+}catch{
+  alert("No user Found")
+}
 }
 
 const updateuser =async(id)=>{
@@ -135,26 +133,21 @@ const updateuser =async(id)=>{
     status:"Active"
   }
 
-    axios.patch(`/users/updateUser/${id}`, 
+    axios.patch(`/api/users/updateUser/${id}`, 
     
 user
-    ,
-    {
-      headers:{
-        api_key:'A3166',
-        authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJuYW1lIjoiYXRlZXEiLCJyb2xlIjoiZGV2IiwibG9nbyI6ImRhc2Rld3E5In0sImlhdCI6MTcxMjM4MjQ2OCwiZXhwIjoxNzEyNDY4ODY4fQ.Xi7pseY8oppyE-lUd83uB6n9NK5qnFWAy4AOKtm-Pn4'
-      }          
-    }
+             
+    
     ).then( response =>{
-      console.log(response.data)
-      if(response.data == 'OK'){
+     
+      if(response.statusText == "OK" ){
 
         alert("User Updated Successfully")
 
-        setData(defaults)
+        reset()
       }
       else{
-        alert("user not Updated ")
+        alert("User not Updated ")
       }
 
     }
@@ -166,7 +159,7 @@ reset()
 },[])
   return (
    <div className=' bg-gradient-to-br from-blue-200 pb-10  bg-green-100 flex flex-col items-center min-h-screen '>
-<div className=' bg-gradient-to-bl text-3xl sm:text-5xl font-extrabold  to-purple-600 from-blue-800 bg-clip-text text-center p-10 text-transparent '>Avaible Tickets</div>
+<div className=' bg-gradient-to-bl text-3xl sm:text-5xl font-extrabold  to-purple-600 from-blue-800 bg-clip-text text-center p-10 text-transparent '>User Registration</div>
 
 <div className='flex sm:flex-row flex-col items-center justify-center w-5/6 border border-white rounded-2xl shadow-lg shadow-slate-700 bg-white bg-opacity-75 gap-5 p-10  flex-wrap py-20'>
 
@@ -183,13 +176,14 @@ reset()
         retriveData(data.srNo)
        
       }      
-     }}
+     }
+    }
   />
 </div>
 
 <div className='flex flex-col items-start mt-5 justify-center w-full   gap-2 '>
   <div className='flex items-start justify-start rounded-md font-bold sm:w-56 w-28 sm:text-normal text-sm p-1'>Logo</div>
-  <div className='flex gap-5'>
+  <div className='flex gap-5 border border-slate-500 rounded-md'>
 
   <ImgPicker  setter={(value) => setData({ ...data, logo: value })}/>
 
@@ -238,7 +232,7 @@ reset()
 
                 
 
-                <button className=' pl-8 pr-10 py-2 rounded-md bg-slate-500 text-white w-36'type='button' onClick={()=>setData(defaults)}><div className='flex items-center'><VscClearAll className='size-5 mr-1'/> Reset</div></button>
+                <button className=' pl-8 pr-10 py-2 rounded-md bg-slate-500 text-white w-36'type='button' onClick={()=>reset()}><div className='flex items-center'><VscClearAll className='size-5 mr-1'/> Reset</div></button>
                 
                 <button className={` pl-8 pr-10 py-2 rounded-md text-white bg-blue-800 w-36 ${data.showSave}`} type ='submit'
                 onClick={()=>saveUser()}

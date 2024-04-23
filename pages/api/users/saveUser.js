@@ -1,7 +1,18 @@
 import db from '../../../config/db';
 
+export const config = {
+    api: {
+      bodyParser: {
+        sizeLimit: '50mb',
+      },
+    },
+  
+  }
+
 export default function handler(req, res) {
+   
     const data = req.body;
+    
         
     const insertquery = `
         INSERT INTO users (
@@ -29,7 +40,7 @@ export default function handler(req, res) {
             '${data.addedBy}',
             '${data.date}'           
         )`;
-    
+   
     if (req.method === 'POST') {
         try {
            

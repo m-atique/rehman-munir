@@ -1,5 +1,15 @@
 import db from '../../../../config/db';
 
+
+export const config = {
+    api: {
+      bodyParser: {
+        sizeLimit: '50mb',
+      },
+    },
+  
+  }
+  
 export default function handler(req, res) {
     const data = req.body;
     const {user} = req.query
