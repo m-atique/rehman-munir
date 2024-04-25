@@ -26,11 +26,11 @@ import Image from "next/image";
   const AdminHeader = () => {
     return (
       <div >
-<Menubar className=" border-b border-second  bg-gradient-to-r from-base to-slate-100 flex justify-between rounded-none py-10 pl-2 pr-8 font-sans  ">
+<Menubar className=" border-b border-second bg-opacity-30 bg-gradient-to-r from-[#c4c4c4] to-[#d4e6f7] flex justify-between rounded-none py-10 pl-2 pr-8 font-sans  h-24 ">
 
-<div className="w-5/12 text-2xl font-bold text-second flex items-center ">
-<Image src={logo} alt="logo" className="w-24 h-20 mr-2" />
-{/* <h1 >Sapphire School of Learning</h1> */}
+<div className="w-5/12 text-2xl font-bold text-second flex items-center  text-slate-800">
+<Image src={logo} alt="logo" className="w-28 h-24 mr-2 brightness-105" />
+<h1 >Rehman Munir Travels</h1>
 </div>
 
    {/* ============first */}

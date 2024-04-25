@@ -25,6 +25,8 @@ export default function handler(req, res) {
     depFlyTime = '${data.depFlyTime}', 
     depLandDate = '${data.depLandDate}',
     depLandTime = '${data.depLandTime}',
+    returnSector  ='${data.returnSector}',         
+    returnFlightNo ='${data.returnFlightNo}', 
     arvFlyDate = '${data.arvFlyDate}', 
     arvFlytime = '${data.arvFlytime}', 
     arvLandDate = '${data.arvLandDate}',

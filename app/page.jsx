@@ -25,9 +25,9 @@ export default function Home() {
 
     return (
       <div className="text-center flex items-center justify-center w-screen h-screen">
-       <h1>HELLO IN DEVELOPER MODE</h1> 
+       <h1>Loading ......</h1> 
 
-      <Link href={'/auth/signOut'} className="bg-red-500 p-2 font-bold ">Sign Out </Link>
+      {/* <Link href={'/auth/signOut'} className="bg-red-500 p-2 font-bold ">Sign Out </Link> */}
       
       </div>
     );

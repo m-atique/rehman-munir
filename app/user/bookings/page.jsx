@@ -67,26 +67,7 @@ const data = [
     fare: "23400",
   },
 ];
-const [ticketData,setTicketData] = useState()
-const getTickets =async(id)=>{
-  try{
- 
-    const response = await axios.get(`/api/tickets/getTickets`)
-    if (response){
-      
-     
-      const data = response.data
-      console.log(data)
 
-      setTicketData(data)
-   } else {
-     alert("No user Found")
-   }
-   
- }catch{
-   alert("No user Found")
- }
- }
 
 useEffect(()=>{
   getTickets()

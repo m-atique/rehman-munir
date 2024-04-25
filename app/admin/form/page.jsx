@@ -79,6 +79,10 @@ const Form = () => {
       depFlyTime: "12:00",
       depLandDate: today,
       depLandTime: "12:00",
+
+      returnSector:"",
+      returnFlightNo:"",
+
       ariveFlyTime: "12:00",
       ariveFlyDate: today,
       ariveLandDate: today,
@@ -98,28 +102,25 @@ const Form = () => {
   );
   const [Ticket, setTicket] = useState(defaults);
 
-  const getAirline =async()=>{
-    const airlinesData = await axios.get('/api/tickets/getairline')
-    const airlines = airlinesData.data.map((item)=>(
-      {
-        value: item.airline,
-        label: item.airline,
-      }
-    ))
-    setEntryTypes(airlines)
-  }
+  const getAirline = async () => {
+    const airlinesData = await axios.get("/api/tickets/getairline");
+    const airlines = airlinesData.data.map((item) => ({
+      value: item.airline,
+      label: item.airline,
+    }));
+    setEntryTypes(airlines);
+  };
 
   //----------------reset
   const reset = async () => {
     const response = await getmaxid("ticketStock", "id");
     setTicket({ ...defaults, srNo: response + 1 });
-    getAirline()
+    getAirline();
   };
 
   //----------------use effect
   useEffect(() => {
     reset();
-
   }, []);
 
   const [entryTypes, setEntryTypes] = useState(datax);
@@ -137,7 +138,7 @@ const Form = () => {
       const ticketData = {
         date: Ticket.date,
         airline: Ticket.airline,
-        logo:Ticket.logo,
+        logo: Ticket.logo,
         sector: Ticket.sector,
         pnr: Ticket.pnr,
         flightNo: Ticket.flightNo,
@@ -145,6 +146,10 @@ const Form = () => {
         depFlyTime: Ticket.depFlyTime,
         depLandDate: Ticket.depLandDate,
         depLandTime: Ticket.depLandTime,
+
+        returnSector: Ticket.returnSector,
+        returnFlightNo: Ticket.returnFlightNo,
+
         arvFlyDate: Ticket.ariveFlyDate,
         arvFlytime: Ticket.ariveFlyTime,
         arvLandDate: Ticket.ariveLandDate,
@@ -160,7 +165,7 @@ const Form = () => {
         totalSeats: Ticket.seats,
       };
 
-      console.log("ticket>>>>>>>>>>>>>>",ticketData)
+      console.log("ticket>>>>>>>>>>>>>>", ticketData);
       axios
         .post(
           `/api/tickets/saveTickets`,
@@ -201,6 +206,10 @@ const Form = () => {
         depFlyTime: Ticket.depFlyTime,
         depLandDate: Ticket.depLandDate,
         depLandTime: Ticket.depLandTime,
+
+        returnSector: Ticket.returnSector,
+        returnFlightNo: Ticket.returnFlightNo,
+
         arvFlyDate: Ticket.ariveFlyDate,
         arvFlytime: Ticket.ariveFlyTime,
         arvLandDate: Ticket.ariveLandDate,
@@ -255,6 +264,10 @@ const Form = () => {
           depFlyTime: entry.depFlyTime.split("T")[1].substr(0, 5),
           depLandDate: entry.depLandDate.split("T")[0],
           depLandTime: entry.depLandTime.split("T")[1].substr(0, 5),
+
+          returnSector: entry.returnSector,
+          returnFlightNo: entry.returnFlightNo,
+
           ariveFlyDate: entry.arvFlyDate.split("T")[0],
           ariveFlyTime: entry.arvFlytime.split("T")[1].substr(0, 5),
           ariveLandDate: entry.arvLandDate.split("T")[0],
@@ -317,51 +330,56 @@ const Form = () => {
           setValue={(value) => setTicket({ ...Ticket, date: value })}
         />
 
-        {/* <LabelInput
+<LabelInput
           type="text"
-          label="AirLine"
-          value={Ticket.airline}
-          setValue={(value) => setTicket({ ...Ticket, airline: value })}
-        /> */}
+          label="PNR"
+          value={Ticket.pnr}
+          setValue={(value) => setTicket({ ...Ticket, pnr: value })}
+        />
         {/* air line  */}
         <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400">
-      <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-48 w-28 sm:text-normal text-sm p-1">
-        Airline
-      </div>
-      <div className="w-full flex ">
-          
-          <div className={`border w-full  flex rounded-sm border-second items-center justify-center pr-2 `}>
-            <div className={`w-full ${typeOpen==false?"block":"hidden"}`}>
-           {entryTypes  && <Selector
-            
-              data={entryTypes}
-              value={Ticket.airline}
-              setValue={(x) => setTicket({ ...Ticket, airline: x })}
-            />}
+          <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-48 w-28 sm:text-normal text-sm p-1">
+            Airline
           </div>
+          <div className="w-full flex ">
+            <div
+              className={`border w-full  flex rounded-sm border-second items-center justify-center pr-2 `}
+            >
+              <div
+                className={`w-full ${typeOpen == false ? "block" : "hidden"}`}
+              >
+                {entryTypes && (
+                  <Selector
+                    data={entryTypes}
+                    value={Ticket.airline}
+                    setValue={(x) => setTicket({ ...Ticket, airline: x })}
+                  />
+                )}
+              </div>
 
-{/* entrytype input */}
-      <input 
-            ref={ref}
-            type="text"
-            id="name"
-            
-            className={`border w-full p-1 rounded-sm focus:outline-none pl-2  ${typeOpen==false?"hidden":"block"}`}
-            value={Ticket.airline}
-            onChange={(e) => setTicket({ ...Ticket, airline: e.target.value })}
-          />
+              {/* entrytype input */}
+              <input
+                ref={ref}
+                type="text"
+                id="name"
+                className={`border w-full p-1 rounded-sm focus:outline-none pl-2  ${
+                  typeOpen == false ? "hidden" : "block"
+                }`}
+                value={Ticket.airline}
+                onChange={(e) =>
+                  setTicket({ ...Ticket, airline: e.target.value })
+                }
+              />
 
-
-<button className='bg-slate-500 rounded-md flex items-center ml-2 text-slate-100 px-2 py-1' onClick={()=>handleaddButton()}>Add</button>
+              <button
+                className="bg-slate-500 rounded-md flex items-center ml-2 text-slate-100 px-2 py-1"
+                onClick={() => handleaddButton()}
+              >
+                Add
+              </button>
+            </div>
           </div>
-         
-      
-    
         </div>
-    </div>
-       
-
-      
 
         <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md pl-1 shadow-slate-500 border border-slate-400">
           <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-56 w-28 sm:text-normal text-sm p-1">
@@ -370,21 +388,21 @@ const Form = () => {
           <ImgPicker
             setter={(value) => setTicket({ ...Ticket, logo: value })}
           />
-          <div className='h-10 w-20 bg-cover  bg-center rounded-e-md bg-slate-300' style={{ backgroundImage: `url(${Ticket.logo})` }}></div>
+          <div
+            className="h-10 w-20 bg-cover  bg-center rounded-e-md bg-slate-300"
+            style={{ backgroundImage: `url(${Ticket.logo})` }}
+          ></div>
         </div>
 
+        
+        <div className="w-full bg-white p-2 font-bold text-lg text-center">
+          One Sided
+        </div>
         <LabelInput
           type="text"
           label="Sector"
           value={Ticket.sector}
           setValue={(value) => setTicket({ ...Ticket, sector: value })}
-        />
-
-        <LabelInput
-          type="text"
-          label="PNR"
-          value={Ticket.pnr}
-          setValue={(value) => setTicket({ ...Ticket, pnr: value })}
         />
         <LabelInput
           type="text"
@@ -421,6 +439,24 @@ const Form = () => {
           setValue={(value) => setTicket({ ...Ticket, depLandTime: value })}
         />
 
+        <div className="w-full bg-white p-2 font-bold text-lg text-center">
+          Retrun Detail
+        </div>
+
+        <LabelInput
+          type="text"
+          label="Return Sector"
+          value={Ticket.returnSector}
+          setValue={(value) => setTicket({ ...Ticket, returnSector: value })}
+        />
+
+        <LabelInput
+          type="text"
+          label=" ReturnFlight No"
+          value={Ticket.returnFlightNo}
+          setValue={(value) => setTicket({ ...Ticket, returnFlightNo: value })}
+        />
+
         <LabelInput
           type="date"
           label="Ariv.Fly Date "
@@ -448,7 +484,9 @@ const Form = () => {
           value={Ticket.ariveLandTime}
           setValue={(value) => setTicket({ ...Ticket, ariveLandTime: value })}
         />
-
+<div className="w-full bg-white p-2 font-bold text-lg text-center">
+          Other Details
+        </div>
         <LabelInput
           type="text"
           label="Bag"
@@ -503,20 +541,11 @@ const Form = () => {
         />
 
         <div>
-          <div className=" h-1/5 flex w-full items-center justify-center flex-wrap  gap-2 ">
-            {/* <button
-              className="disabled:bg-slate-500 pl-8 pr-10 py-2 rounded-md bg-red-600 text-white w-36"
-              type="button"
-              onClick={() => console.log("del")}
-            >
-              {" "}
-              <div className="flex items-center">
-                <ImBin2 className="size-3 mr-1" /> Delete
-              </div>
-            </button> */}
+          <div className=" h-2/5 pt-10 flex w-full items-center justify-center flex-wrap  gap-2 ">
+           
 
             <button
-              className={` pl-8 pr-10 py-2 rounded-md bg-slate-800 text-white w-36 `}
+              className={` pl-8 pr-10 py-2 rounded-md bg-[#4c5065] text-white w-36 `}
               type="button"
               onClick={() => reset()}
             >
@@ -536,7 +565,7 @@ const Form = () => {
               </div>
             </button>
             <button
-              className={` ${Ticket.showSave} pl-8 pr-10 py-2 rounded-md text-white bg-[#04232C] w-36`}
+              className={` ${Ticket.showSave} pl-8 pr-10 py-2 rounded-md text-white bg-[#6f44a2] w-36`}
               type="submit"
               onClick={() => saveTickets()}
             >

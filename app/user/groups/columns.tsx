@@ -7,19 +7,19 @@ import { TbDeviceWatchDown,TbDeviceWatchUp } from "react-icons/tb";
 import { MdWatchLater } from "react-icons/md";
 
 export type rptCol = {
-  depDate:string
-  name:string
-  arrivalDate:string
-  depFlight:string
-  arrivalFlight:string
-  depOrigin:string
+  depFlyDate:string
+  givenName:string
+  arvFlyDate:string
+  // depFlight:string
+  flightNo:string
+  sector:string
   arrivalOrigin:string
   depTime:string
   arrivalTime: string
   bag:string
-  handCarry:string
+  handBag:string
   meal:string
-  fare:string
+  sale:string
   
   }
 
@@ -36,19 +36,19 @@ export const columns: ColumnDef<rptCol>[] = [
     cell:({row})=>{
       return(
         <div>
-          <div className="flex items-center justify-center gap-2 mb-2"><FaPlaneDeparture size={20}/>{row.original.depDate}</div>
-          <div className="flex items-center justify-center gap-2"><FaPlaneArrival size={20}/>{row.original.depDate}</div>
+          <div className="flex items-center justify-center gap-2 mb-2"><FaPlaneDeparture size={20}/>{row.original.depFlyDate}</div>
+          <div className="flex items-center justify-center gap-2"><FaPlaneArrival size={20}/>{row.original.depFlyDate}</div>
         </div>
       )
     } },
     {
-      id: "name",
+      id: "givenName",
      
       header:"Name",
       cell:({row})=>{
         return(
           <div>
-            <div className="flex items-center justify-center gap-2">{row.original.name}  </div>
+            <div className="flex items-center justify-center gap-2">{row.original.givenName}  </div>
           </div>
         )
       } },
