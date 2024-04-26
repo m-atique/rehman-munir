@@ -15,9 +15,10 @@ export default function handler(req, res) {
     const {ticket} = req.query
         
     const update_Qry = `UPDATE ticketStock set 
+    tgroup ='${data.group}', 
     date = '${data.date}',       
     airline = '${data.airline}',    
-    logo =  '${data.logo?data.log:""}',     
+    logo =  '${data.logo?data.logo:""}',     
     sector = '${data.sector}',     
     pnr = '${data.pnr}',  
     flightNo = '${data.flightNo}',      

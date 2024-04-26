@@ -8,14 +8,16 @@ import { MdWatchLater } from "react-icons/md";
 
 export type rptCol = {
   depFlyDate:string
-  givenName:string
   arvFlyDate:string
-  // depFlight:string
+  givenName:string
   flightNo:string
+  returnFlightNo:string
   sector:string
-  arrivalOrigin:string
-  depTime:string
-  arrivalTime: string
+  returnSector:string
+  depFlyTime:string
+  depLandTime:string
+  arvFlyTime:string
+  arvLandTime:string
   bag:string
   handBag:string
   meal:string
@@ -36,8 +38,8 @@ export const columns: ColumnDef<rptCol>[] = [
     cell:({row})=>{
       return(
         <div>
-          <div className="flex items-center justify-center gap-2 mb-2"><FaPlaneDeparture size={20}/>{row.original.depFlyDate}</div>
-          <div className="flex items-center justify-center gap-2"><FaPlaneArrival size={20}/>{row.original.depFlyDate}</div>
+          <div className="flex items-center justify-center gap-2 min-w-max mb-2"><FaPlaneDeparture size={20}/>{row.original.depFlyDate?.split("T")[0].split("-").reverse().join("-")}</div>
+          <div className="flex items-center justify-center gap-2 min-w-max"><FaPlaneArrival size={20}/>{row.original.arvFlyDate?.split("T")[0].split("-").reverse().join("-")}</div>
         </div>
       )
     } },
@@ -48,7 +50,7 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-            <div className="flex items-center justify-center gap-2">{row.original.givenName}  </div>
+            <div className="flex items-center justify-center capitalize gap-2">{row.original.givenName}  </div>
           </div>
         )
       } },
@@ -60,8 +62,8 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-            <div className="text-center">{row.original.depFlight}</div>
-            <div className="text-center">{row.original.arrivalFlight}</div>
+            <div className="text-center uppercase">{row.original.flightNo}</div>
+            <div className="text-center uppercase">{row.original.returnFlightNo}</div>
             </div>
         )
       } },
@@ -73,8 +75,8 @@ export const columns: ColumnDef<rptCol>[] = [
         cell:({row})=>{
           return(
             <div>
-              <div className="flex items-center gap-2 justify-center">{row.original.depOrigin}</div>
-              <div className="flex items-center gap-2 justify-center">{row.original.arrivalOrigin}</div>
+              <div className="flex items-center gap-2 justify-center uppercase">{row.original.sector}</div>
+              <div className="flex items-center gap-2 justify-center uppercase">{row.original.returnSector}</div>
               </div>
           )
         } },
@@ -86,8 +88,8 @@ export const columns: ColumnDef<rptCol>[] = [
       return(
         <div>
           <div className="flex items-center  justify-arround pl-4 gap-2"><MdWatchLater
- size={20}/>{row.original.depTime.split("-")[0]}</div>
-          <div className="flex items-center justify-arround pl-4  gap-2"><MdWatchLater size={20}/>{row.original.arrivalTime.split("-")[0]}</div>
+ size={20}/>{row.original.depFlyTime?.split("T")[1].slice(0,5)}</div>
+          <div className="flex items-center justify-arround pl-4  gap-2"><MdWatchLater size={20}/>{row.original.arvFlyTime?.split("T")[1].slice(0,5)}</div>
         </div>
       )
     } },
@@ -98,8 +100,8 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-              <div className="flex items-center justify-arround pl-4 gap-2"><MdWatchLater size={20}/>{row.original.depTime.split("-")[1]}</div>
-          <div className="flex items-center justify-arround pl-4 gap-2"><MdWatchLater size={20}/>{row.original.arrivalTime.split("-")[1]}</div>
+              <div className="flex items-center justify-arround pl-4 gap-2"><MdWatchLater size={20}/>{row.original.depLandTime?.split("T")[1].slice(0,5)}</div>
+          <div className="flex items-center justify-arround pl-4 gap-2"><MdWatchLater size={20}/>{row.original.arvLandTime?.split("T")[1].slice(0,5)}</div>
           </div>
         )
       } },
@@ -111,7 +113,7 @@ export const columns: ColumnDef<rptCol>[] = [
     cell:({row})=>{
       return(
         <div>
-          <div className="flex items-center justify-center gap-2"><BsFillLuggageFill size={20}/>{row.original.bag}  + {row.original.handCarry} kg </div>
+          <div className="flex items-center justify-center gap-2"><BsFillLuggageFill size={20}/>{row.original.bag?row.original.bag:0}  + {row.original.handBag?row.original.handBag:0} kg </div>
         </div>
       )
     } },
@@ -123,19 +125,19 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-            <div>{row.original.meal}</div>
+            <div className="uppercase">{row.original.meal}</div>
           </div>
         )
       } },
       
       {
-        id: "fare",
+        id: "sale",
        
         header:"Fare",
         cell:({row})=>{
           return(
             <div>
-              <div>{row.original.fare} PKR/-</div>
+              <div>{row.original.sale} PKR/-</div>
 
             </div>
           )

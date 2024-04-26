@@ -26,7 +26,7 @@ import Image from "next/image";
   const AdminHeader = () => {
     return (
       <div >
-<Menubar className=" border-b border-second bg-opacity-30 bg-gradient-to-r from-[#c4c4c4] to-[#d4e6f7] flex justify-between rounded-none py-10 pl-2 pr-8 font-sans  h-24 ">
+<Menubar className="  bg-opacity-30 bg-gradient-to-r from-[#bcb9b9] to-[#b2bebb] flex justify-between rounded-none py-10 pl-2 pr-8 font-sans  h-24 ">
 
 <div className="w-5/12 text-2xl font-bold text-second flex items-center  text-slate-800">
 <Image src={logo} alt="logo" className="w-28 h-24 mr-2 brightness-105" />

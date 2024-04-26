@@ -30,41 +30,7 @@ const Form = () => {
   const { data } = useSession();
   const ref = useRef(null);
 
-  const datax = [
-    {
-      value: "Primary Boys",
-      label: "Primary Boys",
-    },
-    {
-      value: "Middle Boys",
-      label: "Middle Boys",
-    },
-    {
-      value: "High Boys",
-      label: "High Boys",
-    },
-    {
-      value: "College Boys",
-      label: "College Boys",
-    },
-    {
-      value: "Primary Girls",
-      label: "Primary Girls",
-    },
-    {
-      value: "Middle Girls",
-      label: "Middle Girls",
-    },
-    {
-      value: "High Girls",
-      label: "High Girls",
-    },
-    {
-      value: "College Girls",
-      label: "College Girls",
-    },
-  ];
-
+ 
   const today = new Date().toISOString().split("T")[0];
   const defaults = useMemo(
     () => ({
@@ -73,6 +39,7 @@ const Form = () => {
       airline: "",
       logo: "",
       sector: "",
+      group:"",
       pnr: "",
       flightNo: "",
       depFlyDate: today,
@@ -111,11 +78,24 @@ const Form = () => {
     setEntryTypes(airlines);
   };
 
+  const getGroups = async () => {
+    const groupData = await axios.get("/api/tickets/getGroup");
+    const group = groupData.data.map((item) => ({
+      value: item.tgroup,
+      label: item.tgroup,
+    }));
+    setGroups(group);
+  };
+
+
+
+
   //----------------reset
   const reset = async () => {
     const response = await getmaxid("ticketStock", "id");
     setTicket({ ...defaults, srNo: response + 1 });
-    getAirline();
+    await getGroups()
+    await getAirline();
   };
 
   //----------------use effect
@@ -123,8 +103,12 @@ const Form = () => {
     reset();
   }, []);
 
-  const [entryTypes, setEntryTypes] = useState(datax);
+  const [entryTypes, setEntryTypes] = useState([]);
   const [typeOpen, setTypeOpen] = useState(false);
+
+  const [groups, setGroups] = useState([]);
+  const [groupOpen, setGroupOpen] = useState(false);
+
   //====================save ticket
   const saveTickets = async () => {
     if (
@@ -139,6 +123,7 @@ const Form = () => {
         date: Ticket.date,
         airline: Ticket.airline,
         logo: Ticket.logo,
+        group :Ticket.group,
         sector: Ticket.sector,
         pnr: Ticket.pnr,
         flightNo: Ticket.flightNo,
@@ -198,6 +183,7 @@ const Form = () => {
       const ticketData = {
         date: Ticket.date,
         airline: Ticket.airline,
+        group :Ticket.group,
         logo: Ticket.logo,
         sector: Ticket.sector,
         pnr: Ticket.pnr,
@@ -251,12 +237,14 @@ const Form = () => {
       const response = await axios.get(`/api/tickets/ticketbyid/${id}`);
       if (response) {
         const entry = response.data[0];
+        console.log(entry)
         setTicket({
           ...Ticket,
           date: entry.date.split("T")[0],
           airline: entry.airline,
           sector: entry.sector,
           logo: entry.logo,
+          group:entry.tgroup,
           pnr: entry.pnr,
           flightNo: entry.flightNo,
 
@@ -296,6 +284,11 @@ const Form = () => {
     setTypeOpen(!typeOpen);
   };
 
+  const handleaddButtonGroup = () => {
+    ref.current.focus();
+    setGroupOpen(!groupOpen);
+  };
+
   return (
     <div className=" bg-gradient-to-br from-blue-200 pb-10  bg-green-100 flex flex-col items-center  ">
       <div className=" bg-gradient-to-bl text-3xl sm:text-5xl font-extrabold  to-purple-600 from-blue-800 bg-clip-text text-center p-10 text-transparent ">
@@ -323,12 +316,57 @@ const Form = () => {
         {/* </div> */}
         <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2   rounded-md "></div>
 
-        <LabelInput
+        {/* <LabelInput
           type="date"
           label="Date"
           value={Ticket.date}
           setValue={(value) => setTicket({ ...Ticket, date: value })}
-        />
+        /> */}
+
+        {/* -------------Group */}
+        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400">
+          <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-48 w-28 sm:text-normal text-sm p-1">
+            Group
+          </div>
+          <div className="w-full flex ">
+            <div
+              className={`border w-full  flex rounded-sm border-second items-center justify-center pr-2 `}
+            >
+              <div
+                className={`w-full ${groupOpen == false ? "block" : "hidden"}`}
+              >
+                {groups && (
+                  <Selector
+                    data={groups}
+                    value={Ticket.group}
+                    setValue={(x) => setTicket({ ...Ticket, group: x })}
+                  />
+                )}
+              </div>
+
+              {/* entrytype input */}
+              <input
+                ref={ref}
+                type="text"
+                id="name"
+                className={`border w-full p-1 rounded-sm focus:outline-none pl-2  ${
+                  groupOpen == false ? "hidden" : "block"
+                }`}
+                value={Ticket.group}
+                onChange={(e) =>
+                  setTicket({ ...Ticket, group: e.target.value })
+                }
+              />
+
+              <button
+                className="bg-slate-500 rounded-md flex items-center ml-2 text-slate-100 px-2 py-1"
+                onClick={() => handleaddButtonGroup()}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
 
 <LabelInput
           type="text"
@@ -394,7 +432,7 @@ const Form = () => {
           ></div>
         </div>
 
-        
+         
         <div className="w-full bg-white p-2 font-bold text-lg text-center">
           One Sided
         </div>

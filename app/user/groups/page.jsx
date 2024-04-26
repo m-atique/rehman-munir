@@ -3,7 +3,7 @@ import React ,{useState,useEffect}from "react";
 import Grouppicker from "@/components/ui/grouppicker";
 import { Table } from "@/components/ui/table";
 import { columns } from "./columns";
-import { DataTablewithFilters } from "@/components/ui/filtertable";
+import { DataTablewithFilters } from "@/components/ui/filtertable2";
 import axios from "axios";
 
 const Groups = () => {
@@ -76,8 +76,22 @@ const Groups = () => {
       const response = await axios.get(`/api/tickets/getTickets`);
       if (response) {
         const data = response.data;
-        console.log("data-----",data)
-        setTicketData(data);
+        const airlines = Array.from(new Set(data.map((item)=>item.airline)))
+
+        const dataarray = airlines.map((item,index)=>{ 
+          
+          const result = data.filter((x)=>x.airline===item)
+          const logo =result.find((item)=>item.logo !="")
+          return (
+          { 
+          data : result,
+          airline: result[0].airline,
+          logo:logo?logo.logo:null
+        }
+      )
+    })
+    console.log(dataarray)
+        setTicketData(dataarray);
       } else {
         alert("No data Found");
       }
@@ -103,9 +117,13 @@ const Groups = () => {
           </button>
         </div>
       </div>
-      <div className="w-11/12">
-        { ticketData &&
-        <DataTablewithFilters columns={columns} data={data} />
+      <div className="w-11/12 mb-20">
+        { ticketData && 
+
+ticketData.map((item)=>(
+
+          <DataTablewithFilters columns={columns} data={item.data} airline={item.airline} logo={item.logo} />
+        ))
 }
       </div>
     </main>

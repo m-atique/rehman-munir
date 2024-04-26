@@ -13,6 +13,7 @@ export default function handler(req, res) {
 
   const insert_qury = `Insert into ticketStock 
     (
+    tgroup,
     date,       
     airline,    
     logo,       
@@ -44,6 +45,7 @@ export default function handler(req, res) {
     )
     values
     ( 
+        '${data.group}', 
         '${data.date}',         
         '${data.airline}',      
         '${data.logo?data.logo:""}',         
