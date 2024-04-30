@@ -23,21 +23,21 @@ const Grouppicker = (props) => {
           className='px-2 py-1 text-blue-800 font-semibold border rounded-md border-blue-800 bg-white' /> */}
           <div className='border rounded-md text-blue-800 border-blue-800 bg-white'>
             <Selector
-              data={[]}
-              value={props.currentSession}
-              setValue={props.setCurrentSession}
+              data={props.groups}
+              value={props.selectedGroup}
+              setValue={props.setSelectedGroup}
             />
           </div>
           </div>
           {/* Date */}
-          <div className={styles.subDiv}>
+          {/* <div className={styles.subDiv}>
           <label htmlFor="date" className={styles.labels}>Date</label>
         <input type="date" 
         name="Date"  
         value={props.date}
         onChange={e=>props.setDate(e.target.value)}
         className='px-2 py-1 text-blue-800 font-semibold border rounded-md border-blue-800 bg-white' />
-        </div>
+        </div> */}
         </div>
 
         <div className="flex flex-row gap-3">
@@ -46,9 +46,9 @@ const Grouppicker = (props) => {
           <label htmlFor="sector" className={styles.labels}>Sector</label>
           <div className='border rounded-md text-blue-800 border-blue-800 bg-white'>
             <Selector
-              data={[]}
-              value={props.currentSession}
-              setValue={props.setCurrentSession}
+              data={props.sectors}
+              value={props.selectedSector}
+              setValue={props.setSelectedSector}
             />
             </div>
             </div>

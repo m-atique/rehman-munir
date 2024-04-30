@@ -1,10 +1,11 @@
 import { ColumnDef} from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
-import  Bookingform  from "./bookingform"
+import  Bookingform  from "./booking/page"
 import { FaPlaneArrival,FaPlaneDeparture } from "react-icons/fa";
 import { BsFillLuggageFill } from "react-icons/bs";
 import { TbDeviceWatchDown,TbDeviceWatchUp } from "react-icons/tb";
 import { MdWatchLater } from "react-icons/md";
+import Link from "next/link";
 
 export type rptCol = {
   depFlyDate:string
@@ -22,6 +23,7 @@ export type rptCol = {
   handBag:string
   meal:string
   sale:string
+
   
   }
 
@@ -31,6 +33,18 @@ export type rptCol = {
 
 
 export const columns: ColumnDef<rptCol>[] = [
+  // {
+  //   id: "tgroup",
+   
+  //   header:"group",
+  //   cell:({row})=>{
+  //     return(
+  //       <div>
+  //         <div>{row.original.tgroup} PKR/-</div>
+
+  //       </div>
+  //     )
+  //   } },
   {
     id: "date",
    
@@ -68,18 +82,18 @@ export const columns: ColumnDef<rptCol>[] = [
         )
       } },
 
-      {
-        id: "origin",
+      // {
+      //   id: "origin",
        
-        header:"Origin",
-        cell:({row})=>{
-          return(
-            <div>
-              <div className="flex items-center gap-2 justify-center uppercase">{row.original.sector}</div>
-              <div className="flex items-center gap-2 justify-center uppercase">{row.original.returnSector}</div>
-              </div>
-          )
-        } },
+      //   header:"Origin",
+      //   cell:({row})=>{
+      //     return(
+      //       <div>
+      //         <div className="flex items-center gap-2 justify-center uppercase">{row.original.sector}</div>
+      //         <div className="flex items-center gap-2 justify-center uppercase">{row.original.returnSector}</div>
+      //         </div>
+      //     )
+      //   } },
   {
     id: "deptime",
    
@@ -148,9 +162,18 @@ export const columns: ColumnDef<rptCol>[] = [
         enableHiding: false,
         header:"Actions",
         cell:({row})=>{
+          const currentTicket = row.original
           return(
             <div>
-              <Bookingform />
+             <Link  
+              href={{
+                pathname: "/user/groups/booking",
+                query: {
+                  currentTicket: JSON.stringify(currentTicket)
+                },
+              }}
+             
+            className=" text-blue-900 hover:bg-blue-900  border-2 border-blue-900 hover:text-white  rounded-md p-2  shadow shadow-slate-300">Book Now </Link>
             </div>
           )
         }        

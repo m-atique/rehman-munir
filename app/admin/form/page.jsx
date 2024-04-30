@@ -30,6 +30,25 @@ const Form = () => {
   const { data } = useSession();
   const ref = useRef(null);
 
+
+const groupsData = [
+  
+  {
+    value: "KSA",
+    label: "KSA",
+  },
+  {
+    value: "UAE",
+    label: "UAE",
+  },
+  {
+    value: "UMRAH",
+    label: "UMRAH",
+  },
+  
+  
+];
+
  
   const today = new Date().toISOString().split("T")[0];
   const defaults = useMemo(
@@ -94,7 +113,7 @@ const Form = () => {
   const reset = async () => {
     const response = await getmaxid("ticketStock", "id");
     setTicket({ ...defaults, srNo: response + 1 });
-    await getGroups()
+    // await getGroups()
     await getAirline();
   };
 
@@ -106,7 +125,7 @@ const Form = () => {
   const [entryTypes, setEntryTypes] = useState([]);
   const [typeOpen, setTypeOpen] = useState(false);
 
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState(groupsData);
   const [groupOpen, setGroupOpen] = useState(false);
 
   //====================save ticket
@@ -148,6 +167,7 @@ const Form = () => {
         sendName: Ticket.sendName,
         adminId: data?.user.id,
         totalSeats: Ticket.seats,
+        currentSeats: Ticket.seats,
       };
 
       console.log("ticket>>>>>>>>>>>>>>", ticketData);
@@ -209,6 +229,7 @@ const Form = () => {
         sendName: Ticket.sendName,
         adminId: data?.user.id,
         totalSeats: Ticket.seats,
+        
       };
 
       axios
