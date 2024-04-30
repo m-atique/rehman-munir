@@ -5,7 +5,7 @@ import { useEffect, useState, useContext } from "react";
 import { Button } from "@/components/ui/button";
 // import axios from "axios"
 // import { domainContext } from "@/app/contexts/dataproviders"
-// import { useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 import {
   DropdownMenu,
@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 
 const LabelInput = (props) => {
+
   return (
     <div className="flex flex-col items-center justify-center w-1/6 gap-1  text-pretty font-normal p-1 shadow-slate-500  ">
       <div className="flex items-start  justify-start rounded-md font-semibold  p-1 w-full sm:text-normal text-sm ">
@@ -39,7 +40,9 @@ const LabelInput = (props) => {
 
 const Bookingform = (props) => {
   // const ds = useContext(domainContext).base_url
-  // const {data} = useSession()
+  const {data} = useSession()
+
+  
   const today = new Date().toISOString().split("T")[0];
 
   const defaults = useMemo(
@@ -78,11 +81,11 @@ const Bookingform = (props) => {
     setPassengers(updatedPassengers);
   };
 
-  const [data, setData] = useState(defaults);
+  const [formData, setformData] = useState(defaults);
   const [passengers, setPassengers] = useState([]);
 
   const total =
-    parseInt(data.adult) + parseInt(data.child) + parseInt(data.infant);
+    parseInt(formData.adult) + parseInt(formData.child) + parseInt(formData.infant);
 
   //==========================================data
 
@@ -98,10 +101,10 @@ const Bookingform = (props) => {
    //====================save ticket
    const saveBooking = async () => {
     if (ticket.id && ticket.currentSeats && passengers.length > 0) {
-      const savePromises = passengers.map((item, index) => {
+      const savePromises = passengers.map(async (item, index) => {
         const bookingData = {
           date: today,
-          userId:1,
+          userId:data.user.id,
           ticketId:ticket.id,
           name: item.givenName,
           surName: item.surName,
@@ -130,11 +133,19 @@ const Bookingform = (props) => {
   
       // Wait for all save promises to resolve
       Promise.all(savePromises)
-        .then((results) => {
+        .then(async (results) => {
           // All saves completed successfully
+
+          await axios
+          .patch(
+            `/api/tickets/ticketStatus/${ticket.id}`,
+  
+            {currentSeats:parseInt(ticket.totalSeats)-total}
+          )
+
           alert("All bookings saved successfully.");
           setPassengers([]) // Reset form or do any other necessary actions
-          setData(defaults)
+          setformData(defaults)
         })
         .catch((error) => {
           // At least one save operation failed
@@ -156,6 +167,7 @@ const Bookingform = (props) => {
         Ticket Detail
       </div>
         <table className="w-11/12">
+        <tbody>
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Sector
           </th>
@@ -172,7 +184,7 @@ const Bookingform = (props) => {
             Fare
           </th>
 
-          <tbody>
+         
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
                 {ticket.sector}
@@ -191,7 +203,7 @@ const Bookingform = (props) => {
               </td>
             </tr>
           </tbody>
-
+          <tbody>
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Flight Date
           </th>
@@ -207,7 +219,7 @@ const Bookingform = (props) => {
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Timings
           </th>
-          <tbody>
+          
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
               {ticket.depFlyDate.split("T")[0]}
@@ -242,29 +254,29 @@ const Bookingform = (props) => {
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentSeats) - parseInt(data.child) - parseInt(data.infant)}
+            max={parseInt(ticket.currentSeats) - parseInt(formData.child) - parseInt(formData.infant)}
             // max={total}
             label="Adult"
-            value={data.adult}
-            setValue={(value) => setData({ ...data, adult: value })}
+            value={formData.adult}
+            setValue={(value) => setformData({ ...formData, adult: value })}
           />
 
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentSeats) - parseInt(data.adult) - parseInt(data.infant)}
+            max={parseInt(ticket.currentSeats) - parseInt(formData.adult) - parseInt(formData.infant)}
             label="Child"
-            value={data.child}
-            setValue={(value) => setData({ ...data, child: value })}
+            value={formData.child}
+            setValue={(value) => setformData({ ...formData, child: value })}
           />
 
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentSeats) - parseInt(data.adult) - parseInt(data.child)}
+            max={parseInt(ticket.currentSeats) - parseInt(formData.adult) - parseInt(formData.child)}
             label="Infant"
-            value={data.infant}
-            setValue={(value) => setData({ ...data, infant: value })}
+            value={formData.infant}
+            setValue={(value) => setformData({ ...formData, infant: value })}
           />
 
           <div className="flex flex-col items-center justify-center w-3/6 gap-1  text-pretty font-normal p-1 shadow-slate-500  ">
@@ -277,8 +289,8 @@ const Bookingform = (props) => {
             <input
               type="text"
               className="p-1 border border-slate-300 pl-4 rounded-md w-full text-slate-900 bg-slate-100"
-              value={data.remarks}
-              onChange={(e) => setData({ ...data, remarks: e.target.value })}
+              value={formData.remarks}
+              onChange={(e) => setformData({ ...formData, remarks: e.target.value })}
             />
           </div>
         </div>

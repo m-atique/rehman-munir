@@ -42,7 +42,7 @@ export default function handler(req, res) {
     )`;
 
   if (req.method === "POST") {
-    console.log("qry",insert_qury)
+   
     try {
       db.query(insert_qury, (err) => {
         if (err) {
