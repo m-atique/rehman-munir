@@ -10,6 +10,7 @@ import { HiTicket,HiOutlineTicket } from "react-icons/hi2";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import Link from "next/link";
 
+
 export type rptCol = {
   airline:string
   depDate:string

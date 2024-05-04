@@ -167,7 +167,9 @@ const Bookingform = (props) => {
         Ticket Detail
       </div>
         <table className="w-11/12">
-        <tbody>
+        
+          <thead>
+          <tr>
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Sector
           </th>
@@ -183,8 +185,9 @@ const Bookingform = (props) => {
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Fare
           </th>
-
-         
+          </tr>
+          </thead>
+          <tbody>
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
                 {ticket.sector}
@@ -203,7 +206,8 @@ const Bookingform = (props) => {
               </td>
             </tr>
           </tbody>
-          <tbody>
+          <thead>
+          <tr>
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Flight Date
           </th>
@@ -219,6 +223,10 @@ const Bookingform = (props) => {
           <th className="bg-slate-300 w-1/5 border border-slate-600 text-center">
             Timings
           </th>
+          </tr>
+          </thead>
+          <tbody>
+        
           
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
