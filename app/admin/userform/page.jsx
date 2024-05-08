@@ -14,7 +14,7 @@ import {getmaxid} from '@/function_lib/genral'
 const LabelInput =(props)=>{ 
   return(<div className='flex flex-col items-start justify-center w-full  sm:w-2/5 gap-2 '>
   <div className='flex items-start justify-start rounded-md font-bold sm:w-56 w-28 sm:text-normal text-sm p-1'>{props.label}</div>
-  <input type={props.type} className='p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100 border border-slate-500'   value = {props.value} onChange={(e)=>props.setValue(e.target.value)}/>
+  <input type={props.type} className='p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100 border border-slate-500' maxLength={props.max}  value = {props.value} onChange={(e)=>props.setValue(e.target.value)}/>
 </div>)
 }
 
@@ -43,7 +43,7 @@ const Form = () => {
   ),[])
 
   const [data,setData]=useState(defaults)
-  const today = new Date()
+  const today = new Date().toISOString().split("T")[0];
   //=============================
   const saveUser = async () => {
     if(data.name && data.gmail && data.address && data.contact) {
@@ -195,13 +195,13 @@ reset()
 
 <LabelInput type='text' label='Name' value = {data.name} setValue={(value)=>setData({...data,name:value})}/>
 
-<LabelInput type='text' label='Gmail' value = {data.gmail} setValue={(value)=>setData({...data,gmail:value})}/>
+<LabelInput type='email' label='Gmail' value = {data.gmail} setValue={(value)=>setData({...data,gmail:value})}/>
 
 <LabelInput type='text' label='Password' value = {data.pwd} setValue={(value)=>setData({...data,pwd:value})}/>
 
 <LabelInput type='text' label='Confirm Password' value = {data.pwd2} setValue={(value)=>setData({...data,pwd2:value})}/>
 
-<LabelInput type='text' label='Contact' value = {data.contact} setValue={(value)=>setData({...data,contact:value})}/>
+<LabelInput type='number' max={13} label='Contact' value = {data.contact} setValue={(value)=>setData({...data,contact:value})}/>
 
 
 

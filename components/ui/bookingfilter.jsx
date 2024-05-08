@@ -18,12 +18,14 @@ const Bookingfilter = (props) => {
        
           <div className='border rounded-md text-blue-800 border-blue-800 bg-white'>
             <Selector
-              data={[]}
-              value={props.currentSession}
-              setValue={props.setCurrentSession}
+              data={props.sectors}
+              value={props.selectedSector}
+              setValue={props.setSelectedSector}
             />
           </div>
           </div>
+
+
           {/* Date */}
           <div className={styles.subDiv}>
           <label htmlFor="date" className={styles.labels}>Dep. Date</label>
@@ -41,9 +43,9 @@ const Bookingfilter = (props) => {
           <label htmlFor="sector" className={styles.labels}>Status</label>
           <div className='border rounded-md text-blue-800 border-blue-800 bg-white'>
             <Selector
-              data={[]}
-              value={props.currentSession}
-              setValue={props.setCurrentSession}
+              data={props.statuses}
+              value={props.selectedStatus}
+              setValue={props.setSelectedStatus}
             />
             </div>
             </div>

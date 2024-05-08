@@ -8,6 +8,7 @@ import { FcPrint } from "react-icons/fc";
 import { HiOutlinePrinter } from "react-icons/hi2";
 import axios from "axios";
 import { Selector } from "@/components/ui/selector";
+import { Suspense } from "react";
 
 const Options = [
   {
@@ -25,15 +26,15 @@ const Options = [
 ];
 
 const Fv = () => {
-  const params = useSearchParams();
+  // const params = useSearchParams();
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
-  const voucherDetail = params.get("voucherparams");
-  const voucherData = JSON.parse(voucherDetail);
+  // const voucherDetail = params.get("voucherparams");
+  // const voucherData = JSON.parse(voucherDetail);
 
   const Today = new Date().toISOString().split("T")[0];
   const [startDate, setStartDate] = useState(Today);
@@ -120,7 +121,9 @@ const Fv = () => {
         <div className="w-full  p-1 font-bold bg-gradient-to-bl from-purple-600 to-blue-600 bg-clip-text text-transparent text-5xl text-center mb-5">
           Admin Ledger
         </div>
+        <Suspense fallback={()=>(<>Loading......</>)}>
         <Ticket ref={componentRef} tickets ={ledgerData} />
+    </Suspense>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import React from 'react'
 import { MdAirplaneTicket,MdDelete } from "react-icons/md";
 import { HiMiniTicket } from "react-icons/hi2";
 import { RxLapTimer } from "react-icons/rx";
+import { Suspense } from 'react';
 
 import Tickettypes from './components/tickettypes';
 import {PicCarousal} from '@/components/ui/piccarousal'
@@ -44,8 +45,10 @@ const UserHome = () => {
     </div>
   </div>
 </div>
-
+<Suspense fallback={()=>(<>Loading......</>)}>
 <Tickettypes />
+    </Suspense>
+
 
       </div>
       <div className=' p-10 w-full bg-white text-center mt-10'>

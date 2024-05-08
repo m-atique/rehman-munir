@@ -1,4 +1,4 @@
-import db from "../../../config/db";
+import { connectDB } from "../../../config/db";
 
 export const config = {
   api: {
@@ -8,10 +8,10 @@ export const config = {
   },
 };
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const data = req.body;
 
-  const insert_qury = `Insert into ticketStock 
+  const insertQuery = `INSERT INTO ticketStock 
     (
     tgroup,
     date,       
@@ -43,50 +43,51 @@ export default function handler(req, res) {
     bookSeats,  
     currentSeats   
     )
-    values
-    ( 
-        '${data.group}', 
-        '${data.date}',         
-        '${data.airline}',      
-        '${data.logo?data.logo:""}',         
-        '${data.sector}',       
-        '${data.pnr}',   
-        '${data.flightNo}',       
-        '${data.depFlyDate}',   
-        '${data.depFlyTime}',   
-        '${data.depLandDate}',  
-        '${data.depLandTime}',
-        '${data.returnSector}',         
-        '${data.returnFlightNo}',    
-        '${data.arvFlyDate}',   
-        '${data.arvFlytime}',   
-        '${data.arvLandDate}',  
-        '${data.arvLandTime}',  
-        '${data.bag}',          
-        '${data.handbag}',      
-        '${data.meal}',         
-        '${data.purchase}',     
-        '${data.sale}',         
-        '${data.givenName}',    
-        '${data.sendName}',     
-        '${data.adminId}',      
-        '${data.totalSeats}',   
-        '${data.resSeats?data.resSeats:""}',     
-        '${data.bookSeats?data.bookSeats:""}',    
-        '${data.currentSeats?data.currentSeats:""}'     
-    )`;
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
   if (req.method === "POST") {
     try {
-      db.query(insert_qury, (err) => {
-        if (err) {
-          console.log("Error in saving Tickets:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          console.log("Tickets saved successfully");
-          res.status(200).json({ message: "Tickets saved successfully" });
-        }
-      });
+
+      console.log("qry---",insertQuery)
+      const connection = await connectDB(); // Connect to MySQL
+
+      await connection.execute(insertQuery, [
+        data.group,
+        data.date,
+        data.airline,
+        data.logo ? data.logo : "",
+        data.sector,
+        data.pnr,
+        data.flightNo,
+        data.depFlyDate,
+        data.depFlyTime,
+        data.depLandDate,
+        data.depLandTime,
+        data.returnSector,
+        data.returnFlightNo,
+        data.arvFlyDate,
+        data.arvFlytime,
+        data.arvLandDate,
+        data.arvLandTime,
+        data.bag,
+        data.handbag,
+        data.meal,
+        data.purchase,
+        data.sale,
+        data.givenName,
+        data.sendName,
+        data.adminId,
+        data.totalSeats,
+        data.resSeats ? data.resSeats : "",
+        data.bookSeats ? data.bookSeats : "",
+        data.currentSeats ? data.currentSeats : "",
+      ]);
+
+      await connection.end(); // Close the connection
+
+      console.log("Tickets saved successfully");
+      res.status(200).json({ message: "Tickets saved successfully" });
     } catch (error) {
       console.log("Error:", error);
       res.status(500).json({ error: "Internal Server Error" });

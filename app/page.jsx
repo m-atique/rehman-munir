@@ -13,9 +13,10 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
+    console.log("userrole",data?.user.role)
     if(data?.user.role == 'admin'){
      router.push('/admin')
-    }else if (data?.user.role == 'admin'){
+    }else if (data?.user.role == 'user'){
       router.push('/user')
     }
   

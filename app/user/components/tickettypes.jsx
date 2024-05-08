@@ -30,8 +30,8 @@ const TicketTypes = () => {
   return (
     <div className="w-full flex-wrap flex items-start justify-center gap-5 h-screen overflow-visible">
       {data &&
-        data.map((item) => (
-          <div className="w-2/5  shadow shadow-slate-400 rounded-md bg-white h-3/6 p-4 flex flex-col items-center justify-center">
+        data.map((item,index) => (
+          <div key={index} className="w-2/5  shadow shadow-slate-400 rounded-md bg-white h-3/6 p-4 flex flex-col items-center justify-center">
             <div className={`h-[79%] w-full rounded-md `}>
               <Image
                 src={item.img}

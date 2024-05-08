@@ -244,9 +244,10 @@ const Groups = (props) => {
       <div className="w-11/12 mb-20">
         { ticketData && 
 
-ticketData.map((item)=>(
-
+ticketData.map((item,index )=>(
+            <div className="w-full" key={index}>
           <DataTablewithFilters columns={columns} data={item.data} airline={item.airline} logo={item.logo} />
+          </div>
         ))
 }
       </div>

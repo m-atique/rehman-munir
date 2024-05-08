@@ -39,6 +39,11 @@ import Image from "next/image";
    <MenubarMenu>
     <MenubarTrigger> <SiGoogleforms  size ={16} className='mr-2'/> Reports</MenubarTrigger>
 
+    <MenubarContent className=" rounded-none bg-white">
+    <MenubarItem> <TbTimelineEventPlus className='mr-2'/><Link href ='/admin/reserve'>Reservations</Link></MenubarItem>
+
+          
+    </MenubarContent>
 
   
   </MenubarMenu>
@@ -54,7 +59,7 @@ import Image from "next/image";
     <MenubarContent className=" rounded-none bg-white">
     <MenubarItem> <TbTimelineEventPlus className='mr-2'/><Link href ='/admin/form'>Available Tickets Form</Link></MenubarItem>
 
-    <MenubarItem> <TbCashBanknote className='mr-2'/><Link href ='/admin/deposite'>Manage Deposits</Link></MenubarItem>
+    {/* <MenubarItem> <TbCashBanknote className='mr-2'/><Link href ='/admin/deposite'>Manage Deposits</Link></MenubarItem> */}
 
     <MenubarItem> <TbUser className='mr-2'/><Link href ='/admin/userform'>Create Users</Link></MenubarItem>
           

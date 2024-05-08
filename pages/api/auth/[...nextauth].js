@@ -21,6 +21,8 @@ export const authOptions = {
 
           if (credentials.password === user.hash)
          {
+
+         
             return user
           } else {
          

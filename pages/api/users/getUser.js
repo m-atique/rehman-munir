@@ -1,30 +1,29 @@
-import db from '../../../config/db';
+import { connectDB } from '../../../config/db'; // Import the connectDB function from db.js
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const data = req.body;
-      const getuserById = `select * from users where gmail = '${data.gmail}'`;
+      const getUserByEmailQuery = `SELECT * FROM users WHERE gmail = ?`;
 
-      db.query(getuserById, (err, result) => {
-        if (err) {
-          console.log("Error in getting user:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          if (result.recordset.length > 0) {
-            console.log("User found");
-            res.status(200).json(result.recordset); // Sending user data as JSON response
-          } else {
-            console.log("User not found");
-            res.status(404).json({ error: "User not found" });
-          }
-        }
-      });
+      const connection = await connectDB(); // Connect to MySQL
+
+      const [rows, fields] = await connection.execute(getUserByEmailQuery, [data.gmail]);
+
+      await connection.end(); // Close the connection
+
+      if (rows.length > 0) {
+        console.log("User found");
+        res.status(200).json(rows); // Sending user data as JSON response
+      } else {
+        console.log("User not found");
+        res.status(404).json({ error: "User not found" });
+      }
     } catch (error) {
-      console.log("Error:", error);
+      console.error("Error:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   } else {
     res.status(405).json({ error: "Method Not Allowed" });
-  }   
+  }
 }

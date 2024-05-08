@@ -14,6 +14,7 @@ import { GrShieldSecurity } from "react-icons/gr";
 import { SlHandbag } from "react-icons/sl";
 import { DataTablewithFilters } from "@/components/ui/ledgertable";
 import { columns } from './columns';
+import { Suspense } from "react";
 // import brand from '../../../public/brand.png'
 // import { ClassContext,SectionContext,spUnitContext,domainContext } from "@/app/datastore/dataprovider";
 

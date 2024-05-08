@@ -1,5 +1,4 @@
-import db from '../../../../config/db';
-
+import { connectDB } from '../../../../config/db'; // Import the connectDB function from db.js
 
 export const config = {
     api: {
@@ -7,43 +6,52 @@ export const config = {
         sizeLimit: '50mb',
       },
     },
-  
-  }
-  
-export default function handler(req, res) {
+};
+
+export default async function handler(req, res) {
     const data = req.body;
-    const {user} = req.query
+    const { user } = req.query;
+    const userId = parseInt(user, 10); 
         
-    const update_Qry = `UPDATE users set 
-    role = '${data.role}',
-    hash = '${data.pwd}',
-    name = '${data.name}',
-    gmail = '${data.gmail}',
-    contact = '${data.contact}',
-    address = '${data.address}',
-    co = '${data.co}',
-    logo = '${data.logo}',
-    status = '${data.status}',
-    addedBy = '${data.addedBy}',
-    date = '${data.date}'
+    const updateQuery = `UPDATE users SET 
+        role = ?,
+        hash = ?,
+        name = ?,
+        gmail = ?,
+        contact = ?,
+        address = ?,
+        co = ?,
+        logo = ?,
+        status = ?,
+        addedBy = ?,
+        date = ?
+        WHERE id = ?`;
 
-
-    where id =  '${user}'`
-    
     if (req.method === 'PATCH') {
         try {
-           
-            db.query(update_Qry, (err) => {
-                if (err) {
-                    console.log("Error in Updating user:", err);
-                    res.status(500).json({ error: "Internal Server Error" });
-                } else {
-                    console.log("User Updating successfully");
-                    res.status(200).json({ message: "User Updated successfully" });
-                }
-            });
+            const connection = await connectDB(); // Connect to MySQL
+            
+            await connection.execute(updateQuery, [
+                data.role,
+                data.pwd,
+                data.name,
+                data.gmail,
+                data.contact,
+                data.address,
+                data.co,
+                data.logo,
+                data.status,
+                data.addedBy,
+                data.date,
+                userId // Pass user parameter as the last parameter
+            ]);
+
+            await connection.end(); // Close the connection
+
+            console.log("User updated successfully");
+            res.status(200).json({ message: "User updated successfully" });
         } catch (error) {
-            console.log("Error:", error);
+            console.error("Error:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     } else {

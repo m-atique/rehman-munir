@@ -43,8 +43,8 @@ const getTickets = async () => {
     <div className="w-full mb-20 flex justify-center  items-center bg-gradient-to-bl from-slate-200 to-slate-200 flex-col overflow-scroll">
     { ledgerData && 
 
-ledgerData.map((item)=>(
-    <div className='w-11/12 '>
+ledgerData.map((item,index)=>(
+    <div className='w-11/12 ' key={index}>
       <DataTablewithFilters columns={columns} data={item.data} airline={item.agent + " (" +  item.data[0].address+")"}/>
       </div>
     ))

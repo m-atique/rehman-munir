@@ -19,17 +19,6 @@ import { columns } from "../ledger/columns";
 
 
 
-const data=[{
-  pnr:"xsg7788",
-  title:"Mr",
-  name:"Naveed",
-  surName:"Arshad",
-  passport:"4rr5566",
-  payment:345555,
-  recieving:"paid"
-  
-  }]
-
 const Ticket = React.forwardRef((props, ref) => {
 
   const tickets  = props.tickets

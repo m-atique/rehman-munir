@@ -13,14 +13,14 @@ import Link from "next/link";
 
 export type rptCol = {
   airline:string
-  depDate:string
-  arrivalDate:string
+  depflyDate:string
+  arvFlyDate:string
   sector:string
-  adult:string
-  child:string
-  infant:string
-  reservedDAte:string
-  confirmedDate: string
+  adults:string
+  children:string
+  infants:string
+  reserveDate:string
+  bookingDate: string
   status:string
   
   
@@ -39,7 +39,7 @@ export const columns: ColumnDef<rptCol>[] = [
     cell:({row})=>{
       return(
         <div>
-          <div className="text-center">{row.original.airline}</div>
+          <div className="text-center uppercase">{row.original.airline}</div>
         
           </div>
       )
@@ -52,7 +52,7 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-            <div className="flex items-center gap-2 justify-center">{row.original.sector}</div>
+            <div className="flex items-center gap-2 justify-center uppercase">{row.original.sector}</div>
             </div>
         )
       } },
@@ -63,8 +63,10 @@ export const columns: ColumnDef<rptCol>[] = [
     cell:({row})=>{
       return(
         <div>
-          <div className="flex items-center justify-center gap-2 mb-2"><FaPlaneDeparture size={20}/>{row.original.depDate}</div>
-          <div className="flex items-center justify-center gap-2"><FaPlaneArrival size={20}/>{row.original.depDate}</div>
+          <div className="flex items-center justify-center gap-2 mb-2"><FaPlaneDeparture size={20}/>{row.original.depflyDate?.split("T")[0].split("-").reverse
+          ().join("-")}</div>
+          <div className="flex items-center justify-center gap-2"><FaPlaneArrival size={20}/>{row.original.arvFlyDate?.split("T")[0].split("-").reverse
+          ().join("-")}</div>
         </div>
       )
     } },
@@ -78,19 +80,19 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-              <div className="flex items-center justify-arround pl-4 gap-2">{row.original.adult}</div>
+              <div className="flex items-center justify-arround pl-4 gap-2">{row.original.adults}</div>
           </div>
         )
       } },
 
         {
-    id: "child",
+    id: "children",
    
     header:"Child",
     cell:({row})=>{
       return(
         <div>
-          <div className="flex items-center justify-center gap-2">{row.original.child}  </div>
+          <div className="flex items-center justify-center gap-2">{row.original.children}  </div>
         </div>
       )
     } },
@@ -102,7 +104,7 @@ export const columns: ColumnDef<rptCol>[] = [
       cell:({row})=>{
         return(
           <div>
-            <div>{row.original.infant}</div>
+            <div>{row.original.infants}</div>
           </div>
         )
       } },
@@ -126,7 +128,8 @@ export const columns: ColumnDef<rptCol>[] = [
           cell:({row})=>{
             return(
               <div>
-                <div>{row.original.reservedDAte} </div>
+                <div>{row.original.reserveDate?.split("T")[0].split("-").reverse
+          ().join("-")} </div>
   
               </div>
             )
@@ -138,7 +141,8 @@ export const columns: ColumnDef<rptCol>[] = [
             cell:({row})=>{
               return(
                 <div>
-                  <div>{row.original.confirmedDate} </div>
+                  <div>{row.original.bookingDate?.split("T")[0].split("-").reverse
+          ().join("-")} </div>
     
                 </div>
               )
