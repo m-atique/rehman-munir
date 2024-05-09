@@ -30,7 +30,7 @@ import Image from "next/image";
 
 <div className="w-5/12 text-2xl font-bold text-second flex items-center  text-slate-800">
 <Image src={logo} alt="logo" className="w-28 h-24 mr-2 brightness-105" />
-<h1 >Rehman Munir Travels</h1>
+<h1 >Rehman Munir Travel</h1>
 </div>
 
    {/* ============first */}
