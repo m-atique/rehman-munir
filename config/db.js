@@ -44,7 +44,7 @@ require('dotenv').config();
 
 
 const config = {
-    host: "localhost", // MySQL host
+    host: "server86.web-hosting.com", // MySQL host
     user: "rehmeqzv_rehmanmunir", // MySQL username
     database: "rehmeqzv_rehmanmunir", // MySQL database name
     password:"Rmunir@1234",
