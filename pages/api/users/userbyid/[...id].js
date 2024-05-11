@@ -1,31 +1,22 @@
-import { connectDB } from '../../../../config/db'; // Import the connectDB function from db.js
 
-export default async function handler(req, res) {
-  if (req.method === 'GET') {
+import { sql } from '@vercel/postgres';
+
+export default async function handler(request, response) {
+  const id = parseInt(request.query.id); // Assuming id is passed as a query parameter
+
+  if (request.method === "GET") {
     try {
-      const { id } = req.query;
-      const userId = parseInt(id, 10); 
-      console.log("user", id);
+      // Execute the SQL query with the id parameter
+      const user = await sql`
+        SELECT * FROM users WHERE id = ${id}
+      `;
 
-      const getUserByIdQuery = `SELECT * FROM users WHERE id = ?`;
-
-      const connection = await connectDB(); // Connect to MySQL
-
-      const [rows, fields] = await connection.execute(getUserByIdQuery, [userId]);
-
-      await connection.end(); // Close the connection
-
-      if (rows.length > 0) {
-        res.status(200).json(rows); // Sending user data as JSON response
-      } else {
-        console.log("data not found");
-        res.status(404).json({ error: "data not found" });
-      }
+      // Return the user data
+      return response.status(200).json(user.rows[0]);
     } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
+    return response.status(405).json({ MESSAGE: "Method not allowed" });
   }
 }

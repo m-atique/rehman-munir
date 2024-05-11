@@ -1,29 +1,21 @@
-import { connectDB } from '../../../config/db'; // Import the connectDB function from db.js
+import { sql } from '@vercel/postgres';
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
+export default async function handler(request, response) {
+  const gmail = request.body.gmail; 
+
+  if (request.method === "POST") {
     try {
-      const data = req.body;
-      const getUserByEmailQuery = `SELECT * FROM users WHERE gmail = ?`;
+      // Execute the SQL query with the gmail parameter
+      const user = await sql`
+        SELECT * FROM users WHERE gmail = ${gmail}
+      `;
 
-      const connection = await connectDB(); // Connect to MySQL
-
-      const [rows, fields] = await connection.execute(getUserByEmailQuery, [data.gmail]);
-
-      await connection.end(); // Close the connection
-
-      if (rows.length > 0) {
-        console.log("User found");
-        res.status(200).json(rows); // Sending user data as JSON response
-      } else {
-        console.log("User not found");
-        res.status(404).json({ error: "User not found" });
-      }
+      // Return the user data
+      return response.status(200).json(user.rows);
     } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
+    return response.status(405).json({ MESSAGE: "Method not allowed" });
   }
 }

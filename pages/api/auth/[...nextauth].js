@@ -16,7 +16,8 @@ export const authOptions = {
         async authorize(credentials, req) {
         
         const users = await axios.post(`${process.env.NEXTAUTH_URL}/api/users/getUser`,{gmail:credentials.username})
-            const user = users.data[0]
+        const user = users.data[0]
+        
           
 
           if (credentials.password === user.hash)

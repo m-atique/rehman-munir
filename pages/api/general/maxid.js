@@ -1,28 +1,21 @@
-import { connectDB } from '../../../config/db';
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
+import { sql } from '@vercel/postgres';
+
+export default async function handler(request, response) {
+  const table = request.body.table;
+  const id = request.body.id 
+
+  if (request.method === "POST") {
     try {
-      const data = req.body;
-      const maxIdQuery = `SELECT MAX(${data.id}) AS maxid FROM ${data.table}`;
+      // Execute the SQL query 
+      const ids = await sql`SELECT MAX(${id}) AS maxid FROM ${table}`;
 
-      const connection = await connectDB(); // Connect to MySQL
-      
-      const [rows, fields] = await connection.execute(maxIdQuery);
-
-      await connection.end(); // Close the connection
-
-      if (rows.length > 0) {
-        res.status(200).json(rows[0]); // Sending data as JSON response
-      } else {
-        console.log("Data not found");
-        res.status(404).json({ error: "Data not found" });
-      }
+      // Return the user data
+      return response.status(200).json(ids.rows);
     } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
+    return response.status(405).json({ MESSAGE: "Method not allowed" });
   }
 }
