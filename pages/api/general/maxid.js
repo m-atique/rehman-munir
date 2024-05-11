@@ -2,16 +2,24 @@
 import { sql } from '@vercel/postgres';
 
 export default async function handler(request, response) {
-  const table = request.body.table;
-  const id = request.body.id 
+ const data = request.body
 
-  if (request.method === "POST") {
+  if (request.method === "GET") {
     try {
       // Execute the SQL query 
-      const ids = await sql`SELECT MAX(${id}) AS maxid FROM ${table}`;
+
+      const lastuser = await sql`select max(id)  as maxId from users`;
+      const lastticket = await sql`select max(id)  as maxId from ticketstock`;
+      const lastbooking = await sql`select max(id)  as maxId from bookings`;
 
       // Return the user data
-      return response.status(200).json(ids.rows);
+      return response.status(200).json(
+        {
+          lastuser:lastuser.rows[0].maxid,
+          lastticket:lastticket.rows[0].maxid,
+          lastbooking:lastbooking.rows[0].maxid,
+        }
+      );
     } catch (error) {
       return response.status(500).json({ error: error.message });
     }

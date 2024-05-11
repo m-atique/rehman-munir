@@ -85,21 +85,26 @@ const Form = () => {
       )
         } else {alert("Note: Please Fill All Fields");}
         }
+
+
+       
 //----------------reset
         const reset = async()=>{ 
-          const response = await getmaxid('users',"id")
-          setData({...defaults,srNo:response+1})
+          const response = await axios.get('/api/general/maxid')
+          const id = response.data.lastuser
+          setData({...defaults,srNo:id})
       
     }
 //-------------------get user
 const retriveData =async(id)=>{
  try{
 
+
    const response = await axios.get(`/api/users/userbyid/${id}`)
    if (response){
-     
     
-     const user = response.data[0]
+    
+     const user = response.data
      setData({...data,
       name:user.name,
       gmail:user.gmail,contact:user.contact,pwd:user.hash,pwd2:user.hash,address:user.address,co:user.co,logo:user.logo,showSave:'hidden',showUpdate:'block'

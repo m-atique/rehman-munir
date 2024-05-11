@@ -1,60 +1,36 @@
-import { connectDB } from '../../../../config/db'; // Import the connectDB function from db.js
+import { sql } from '@vercel/postgres';
 
-export const config = {
-    api: {
-      bodyParser: {
-        sizeLimit: '50mb',
-      },
-    },
-};
+export default async function handler(request, response) {
+  const user = parseInt(request.query.user); // Assuming id is passed as a query parameter
+  const data = request.body;
 
-export default async function handler(req, res) {
-    const data = req.body;
-    const { user } = req.query;
-    const userId = parseInt(user, 10); 
-        
-    const updateQuery = `UPDATE users SET 
-        role = ?,
-        hash = ?,
-        name = ?,
-        gmail = ?,
-        contact = ?,
-        address = ?,
-        co = ?,
-        logo = ?,
-        status = ?,
-        addedBy = ?,
-        date = ?
-        WHERE id = ?`;
+  if (request.method === "PATCH") {
+    try {
+      // Execute the SQL query with parameterized values
+      await sql`
+        UPDATE users SET
+          role = ${data.role},
+          hash = ${data.pwd},
+          name = ${data.name},
+          gmail = ${data.gmail},
+          contact = ${data.contact},
+          address = ${data.address},
+          co = ${data.co},
+          logo = ${data.logo},
+          status = ${data.status},
+          addedBy = ${data.addedBy},
+          date = ${data.date}
+        WHERE id = ${user}
+      `;
 
-    if (req.method === 'PATCH') {
-        try {
-            const connection = await connectDB(); // Connect to MySQL
-            
-            await connection.execute(updateQuery, [
-                data.role,
-                data.pwd,
-                data.name,
-                data.gmail,
-                data.contact,
-                data.address,
-                data.co,
-                data.logo,
-                data.status,
-                data.addedBy,
-                data.date,
-                userId // Pass user parameter as the last parameter
-            ]);
-
-            await connection.end(); // Close the connection
-
-            console.log("User updated successfully");
-            res.status(200).json({ message: "User updated successfully" });
-        } catch (error) {
-            console.error("Error:", error);
-            res.status(500).json({ error: "Internal Server Error" });
-        }
-    } else {
-        res.status(405).json({ error: "Method Not Allowed" });
+      // Return a success response
+      return response.status(200).json({ message: "User updated successfully" });
+    } catch (error) {
+      // Handle errors
+      return response.status(500).json({ error: error.message });
     }
+  } else {
+    // Handle invalid HTTP method
+    return response.status(405).json({ MESSAGE: "Method not allowed" });
+  }
 }
