@@ -92,7 +92,7 @@ const Form = () => {
         const reset = async()=>{ 
           const response = await axios.get('/api/general/maxid')
           const id = response.data.lastuser
-          setData({...defaults,srNo:id})
+          setData({...defaults,srNo:parseInt(id)+1})
       
     }
 //-------------------get user
