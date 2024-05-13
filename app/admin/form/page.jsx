@@ -111,8 +111,10 @@ const groupsData = [
 
   //----------------reset
   const reset = async () => {
-    const response = await getmaxid("ticketStock", "id");
-    setTicket({ ...defaults, srNo: response + 1 });
+    const response = await axios.get('/api/general/maxid')
+    const id = response.data.lastticket
+    
+    setTicket({ ...defaults, srNo:parseInt(id)+1})
     // await getGroups()
     await getAirline();
   };
@@ -223,12 +225,12 @@ const groupsData = [
         bag: Ticket.bag,
         handbag: Ticket.handBag,
         meal: Ticket.meal,
-        purchase: Ticket.purchase,
-        sale: Ticket.sale,
+        purchase: parseInt(Ticket.purchase),
+        sale: parseInt(Ticket.sale),
         givenName: Ticket.givenName,
         sendName: Ticket.sendName,
-        adminId: data?.user.id,
-        totalSeats: Ticket.seats,
+        adminId: parseInt(data?.user.id),
+        totalSeats: parseInt(Ticket.seats),
         
       };
 
