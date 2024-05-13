@@ -71,7 +71,7 @@ const Form = () => {
 
       ).then( response =>{
         console.log(response)
-        if(response.statusText == "OK"){
+        if(response.status == 200){
 
           alert("User Created Successfully")
 
