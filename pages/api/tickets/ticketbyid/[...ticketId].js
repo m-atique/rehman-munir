@@ -1,32 +1,20 @@
-import db from '../../../../config/db';
 
-export default function handler(req, res) {
- 
-  if (req.method === 'GET') {
+import { sql } from '@vercel/postgres';
+
+export default async function handler(request, response) {
+  const ticketId = parseInt(request.query.ticketId); // Assuming id is passed as a query parameter
+
+  if (request.method === "GET") {
     try {
-        const {ticketId} = req.query
-       
-      const qry = `select *  from ticketStock  where id =  '${ticketId}'`;
+      // Execute the SQL query with the id parameter
+      const ticket = await sql`SELECT * FROM ticketstock WHERE id = ${ticketId}`;
 
-      db.query(qry, (err, result) => {
-        if (err) {
-          console.log("Error in getting data:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          if (result.recordset.length > 0) {
-           
-            res.status(200).json(result.recordset); // Sending user data as JSON response
-          } else {
-            console.log("data not found");
-            res.status(404).json({ error: "data not found" });
-          }
-        }
-      });
+      // Return the user data
+      return response.status(200).json(ticket.rows);
     } catch (error) {
-      console.log("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
-  }   
+    return response.status(405).json({ MESSAGE: "Method not allowed" });
+  }
 }

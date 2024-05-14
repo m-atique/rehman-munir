@@ -165,9 +165,9 @@ ${data.givenName},
 ${data.sendName},
 ${data.adminId},
 ${data.totalSeats},
-${data.resSeats ? data.resSeats : ""},
-${data.bookSeats ? data.bookSeats : ""},
-${data.currentSeats ? data.currentSeats : ""}
+${data.resSeats ? data.resSeats : null},
+${data.bookSeats ? data.bookSeats : null},
+${data.currentSeats ? data.currentSeats : null}
       )`;
     
       return response.status(200).json({ MESSAGE: "SAVED" }); // Corrected: "MASSAGE" changed to "MESSAGE"

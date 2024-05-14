@@ -14,7 +14,7 @@ import {getmaxid} from '@/function_lib/genral'
 const LabelInput =(props)=>{ 
   return(<div className='flex flex-col items-start justify-center w-full  sm:w-2/5 gap-2 '>
   <div className='flex items-start justify-start rounded-md font-bold sm:w-56 w-28 sm:text-normal text-sm p-1'>{props.label}</div>
-  <input type={props.type} className='p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100 border border-slate-500' maxLength={props.max}  value = {props.value} onChange={(e)=>props.setValue(e.target.value)}/>
+  <input type={props.type} className='p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100 border border-slate-500' max={props.max}  value = {props.value} onChange={(e)=>props.setValue(e.target.value)}/>
 </div>)
 }
 
@@ -70,7 +70,7 @@ const Form = () => {
   user
 
       ).then( response =>{
-        console.log(response)
+        
         if(response.status == 200){
 
           alert("User Created Successfully")
@@ -145,7 +145,7 @@ user
     
     ).then( response =>{
      
-      if(response.statusText == "OK" ){
+      if(response.status == 200 ){
 
         alert("User Updated Successfully")
 
@@ -202,11 +202,21 @@ reset()
 
 <LabelInput type='email' label='Gmail' value = {data.gmail} setValue={(value)=>setData({...data,gmail:value})}/>
 
-<LabelInput type='text' label='Password' value = {data.pwd} setValue={(value)=>setData({...data,pwd:value})}/>
+<LabelInput type='password' label='Password' value = {data.pwd} setValue={(value)=>setData({...data,pwd:value})}/>
 
-<LabelInput type='text' label='Confirm Password' value = {data.pwd2} setValue={(value)=>setData({...data,pwd2:value})}/>
+{/* <LabelInput type='text' label='Confirm Password' value = {data.pwd2} setValue={(value)=>setData({...data,pwd2:value})}/> */}
 
-<LabelInput type='number' max={13} label='Contact' value = {data.contact} setValue={(value)=>setData({...data,contact:value})}/>
+<div className='flex flex-col items-start justify-center w-full  sm:w-2/5 gap-2 '>
+  <div className='flex items-start justify-start rounded-md font-bold sm:w-56 w-28 sm:text-normal text-sm p-1'>Confirm Password</div>
+  <input type="password" className='p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100 border border-slate-500'   value = {data.pwd2} onChange={(e)=>setData({...data,pwd2:e.target.value})}
+    onBlur={()=>{ if (data.pwd != data.pwd2){alert("Password doesn't Match")}}}
+    
+  />
+</div>
+
+<LabelInput type='number'  label='Contact' value = {data.contact} setValue={(value)=>setData({...data,contact:value})}/>
+
+
 
 
 

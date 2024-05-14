@@ -160,16 +160,16 @@ const groupsData = [
         arvFlytime: Ticket.ariveFlyTime,
         arvLandDate: Ticket.ariveLandDate,
         arvLandTime: Ticket.ariveLandTime,
-        bag: Ticket.bag,
-        handbag: Ticket.handBag,
+        bag: parseInt(Ticket.bag),
+        handbag: parseInt(Ticket.handBag),
         meal: Ticket.meal,
-        purchase: Ticket.purchase,
-        sale: Ticket.sale,
+        purchase: parseInt(Ticket.purchase),
+        sale: parseInt(Ticket.sale),
         givenName: Ticket.givenName,
         sendName: Ticket.sendName,
-        adminId: data?.user.id,
-        totalSeats: Ticket.seats,
-        currentSeats: Ticket.seats,
+        adminId: parseInt(data?.user.id),
+        totalSeats: parseInt(Ticket.seats),
+        currentSeats: parseInt(Ticket.seats)
       };
 
       console.log("ticket>>>>>>>>>>>>>>", ticketData);
@@ -180,7 +180,7 @@ const groupsData = [
           ticketData
         )
         .then((response) => {
-          if (response.statusText == "OK") {
+          if (response.status == 200) {
             alert("Saved Successfully");
 
             reset();
@@ -222,16 +222,15 @@ const groupsData = [
         arvFlytime: Ticket.ariveFlyTime,
         arvLandDate: Ticket.ariveLandDate,
         arvLandTime: Ticket.ariveLandTime,
-        bag: Ticket.bag,
-        handbag: Ticket.handBag,
+        bag: parseInt(Ticket.bag),
+        handbag: parseInt(Ticket.handBag),
         meal: Ticket.meal,
         purchase: parseInt(Ticket.purchase),
         sale: parseInt(Ticket.sale),
         givenName: Ticket.givenName,
         sendName: Ticket.sendName,
         adminId: parseInt(data?.user.id),
-        totalSeats: parseInt(Ticket.seats),
-        
+        totalSeats: parseInt(Ticket.seats)
       };
 
       axios
@@ -241,7 +240,7 @@ const groupsData = [
           ticketData
         )
         .then((response) => {
-          if (response.statusText == "OK") {
+          if (response.status == 200) {
             alert("Updated Successfully");
 
             reset();
@@ -257,10 +256,10 @@ const groupsData = [
   //===============================retriving
   const retriveData = async (id) => {
     try {
-      const response = await axios.get(`/api/tickets/ticketbyid/${id}`);
+      const response = await axios.get(`/api/tickets/ticketbyid/${parseInt(id)}`);
       if (response) {
         const entry = response.data[0];
-        console.log(entry)
+       console.log("data.....",entry.depflytime.substr(0,5))
         setTicket({
           ...Ticket,
           date: entry.date.split("T")[0],
@@ -271,18 +270,18 @@ const groupsData = [
           pnr: entry.pnr,
           flightNo: entry.flightNo,
 
-          depFlyDate: entry.depFlyDate.split("T")[0],
-          depFlyTime: entry.depFlyTime.split("T")[1].substr(0, 5),
-          depLandDate: entry.depLandDate.split("T")[0],
-          depLandTime: entry.depLandTime.split("T")[1].substr(0, 5),
+          depFlyDate: entry.depflydate.split("T")[0],
+          depFlyTime: entry.depflytime.substr(0, 5),
+          depLandDate: entry.deplanddate.split("T")[0],
+          deplandtime: entry.deplandtime.substr(0, 5),
 
           returnSector: entry.returnSector,
           returnFlightNo: entry.returnFlightNo,
 
-          ariveFlyDate: entry.arvFlyDate.split("T")[0],
-          ariveFlyTime: entry.arvFlytime.split("T")[1].substr(0, 5),
-          ariveLandDate: entry.arvLandDate.split("T")[0],
-          ariveLandTime: entry.arvLandTime.split("T")[1].substr(0, 5),
+          ariveFlyDate: entry.arvflydate.split("T")[0],
+          ariveFlyTime: entry.arvflytime.substr(0, 5),
+          ariveLandDate: entry.arvlanddate.split("T")[0],
+           ariveLandTime: entry.arvlandtime.substr(0, 5),
           bag: entry.bag,
           handBag: entry.handbag,
           meal: entry.meal,
@@ -292,7 +291,7 @@ const groupsData = [
           sendName: entry.sendName,
           seats: entry.totalSeats,
           showSave: "hidden",
-          showUpdate: "block",
+          showUpdate: "block"
         });
       } else {
         alert("No Data Found");
