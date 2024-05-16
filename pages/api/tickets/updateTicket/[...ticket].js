@@ -3,43 +3,12 @@ import { sql } from '@vercel/postgres';
 export default async function handler(request, response) {
   const ticket = parseInt(request.query.ticket); // Assuming id is passed as a query parameter
   const data = request.body;
-console.log(`
-UPDATE ticketstock SET
-tgroup = ${data.group},
-date = ${data.date},
-airline = ${data.airline},
-logo = ${data.logo ? data.logo : ""},
-sector = ${data.sector},
-pnr = ${data.pnr},
-flightNo = ${data.flightNo},
-depFlyDate = ${data.depFlyDate},
-depFlyTime = ${data.depFlyTime},
-depLandDate = ${data.depLandDate},
-depLandTime = ${data.depLandTime},
-returnSector = ${data.returnSector},
-returnFlightNo = ${data.returnFlightNo},
-arvFlyDate = ${data.arvFlyDate},
-arvFlytime = ${data.arvFlytime},
-arvLandDate = ${data.arvLandDate},
-arvLandTime = ${data.arvLandTime},
-bag = ${data.bag},
-handbag = ${data.handbag},
-meal = ${data.meal},
-purchase = ${data.purchase},
-sale = ${data.sale},
-givenName = ${data.givenName},
-sendName = ${data.sendName},
-adminId = ${data.adminId},
-totalSeats = ${data.totalSeats},
-resSeats = ${data.resSeats ? data.resSeats : null},
-bookSeats = ${data.bookSeats ? data.bookSeats : null}
-WHERE id = ${ticket}
-`)
+
   if (request.method === "PATCH") {
     try {
       // Execute the SQL query with parameterized values
       await sql`
-        UPDATE ticket SET
+        UPDATE ticketstock SET
         tgroup = ${data.group},
         date = ${data.date},
         airline = ${data.airline},
@@ -65,9 +34,7 @@ WHERE id = ${ticket}
         givenName = ${data.givenName},
         sendName = ${data.sendName},
         adminId = ${data.adminId},
-        totalSeats = ${data.totalSeats},
-        resSeats = ${data.resSeats ? data.resSeats : null},
-        bookSeats = ${data.bookSeats ? data.bookSeats : null},
+        totalSeats = ${data.totalSeats}
         WHERE id = ${ticket}
       `;
 

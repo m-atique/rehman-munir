@@ -9,12 +9,15 @@ import { getmaxid } from "@/function_lib/genral";
 import { useSession } from "next-auth/react";
 import { Selector } from "@/components/ui/selector";
 import ImgPicker from "@/components/ui/imagepicker";
+import Spinner from "@/components/ui/loading"
+import { Suspense } from "react";
 
 const LabelInput = (props) => {
   return (
     <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400">
       <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-56 w-28 sm:text-normal text-sm p-1">
-        {props.label}
+        {props.label} 
+       
       </div>
       <input
         type={props.type}
@@ -87,6 +90,8 @@ const groupsData = [
     []
   );
   const [Ticket, setTicket] = useState(defaults);
+  const [loading,setLoading]= useState(false)
+  const [Saving,setSaving]= useState(false)
 
   const getAirline = async () => {
     const airlinesData = await axios.get("/api/tickets/getairline");
@@ -111,12 +116,14 @@ const groupsData = [
 
   //----------------reset
   const reset = async () => {
+    setLoading(true)
     const response = await axios.get('/api/general/maxid')
     const id = response.data.lastticket
     
     setTicket({ ...defaults, srNo:parseInt(id)+1})
     // await getGroups()
     await getAirline();
+    setLoading(false)
   };
 
   //----------------use effect
@@ -172,7 +179,7 @@ const groupsData = [
         currentSeats: parseInt(Ticket.seats)
       };
 
-      console.log("ticket>>>>>>>>>>>>>>", ticketData);
+      setSaving(true)
       axios
         .post(
           `/api/tickets/saveTickets`,
@@ -184,6 +191,7 @@ const groupsData = [
             alert("Saved Successfully");
 
             reset();
+            setSaving(false)
           } else {
             alert("Not Saved");
           }
@@ -194,6 +202,7 @@ const groupsData = [
   };
   //====================update ticket
   const updateTickets = async (id) => {
+    
     if (
       Ticket.pnr &&
       Ticket.airline &&
@@ -233,6 +242,8 @@ const groupsData = [
         totalSeats: parseInt(Ticket.seats)
       };
 
+
+  setSaving(true)
       axios
         .patch(
           `/api/tickets/updateTicket/${id}`,
@@ -242,8 +253,9 @@ const groupsData = [
         .then((response) => {
           if (response.status == 200) {
             alert("Updated Successfully");
-
+            setSaving(false)
             reset();
+
           } else {
             alert("Not Updated");
           }
@@ -255,11 +267,12 @@ const groupsData = [
 
   //===============================retriving
   const retriveData = async (id) => {
+    setLoading(true)
     try {
       const response = await axios.get(`/api/tickets/ticketbyid/${parseInt(id)}`);
       if (response) {
         const entry = response.data[0];
-       console.log("data.....",entry.depflytime.substr(0,5))
+      
         setTicket({
           ...Ticket,
           date: entry.date.split("T")[0],
@@ -268,15 +281,15 @@ const groupsData = [
           logo: entry.logo,
           group:entry.tgroup,
           pnr: entry.pnr,
-          flightNo: entry.flightNo,
+          flightNo: entry.flightno,
 
           depFlyDate: entry.depflydate.split("T")[0],
           depFlyTime: entry.depflytime.substr(0, 5),
           depLandDate: entry.deplanddate.split("T")[0],
           deplandtime: entry.deplandtime.substr(0, 5),
 
-          returnSector: entry.returnSector,
-          returnFlightNo: entry.returnFlightNo,
+          returnSector: entry.returnsector,
+          returnFlightNo: entry.returnflightno,
 
           ariveFlyDate: entry.arvflydate.split("T")[0],
           ariveFlyTime: entry.arvflytime.substr(0, 5),
@@ -287,12 +300,13 @@ const groupsData = [
           meal: entry.meal,
           purchase: entry.purchase,
           sale: entry.sale,
-          givenName: entry.givenName,
-          sendName: entry.sendName,
-          seats: entry.totalSeats,
+          givenName: entry.givenname,
+          sendName: entry.sendname,
+          seats: entry.totalseats,
           showSave: "hidden",
           showUpdate: "block"
         });
+        setLoading(false)
       } else {
         alert("No Data Found");
       }
@@ -315,6 +329,10 @@ const groupsData = [
     <div className=" bg-gradient-to-br from-blue-200 pb-10  bg-green-100 flex flex-col items-center  ">
       <div className=" bg-gradient-to-bl text-3xl sm:text-5xl font-extrabold  to-purple-600 from-blue-800 bg-clip-text text-center p-10 text-transparent ">
         Avaible Tickets
+        <div className="w-4/5 h-4/5">
+
+        
+        </div>
       </div>
 
       <div className="flex sm:flex-row flex-col items-center justify-center w-5/6 border border-white rounded-2xl shadow-lg shadow-slate-700 bg-white bg-opacity-75 gap-5 p-10  flex-wrap">
@@ -323,6 +341,9 @@ const groupsData = [
           <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-56 w-28 sm:text-normal text-sm p-1">
             S.No
           </div>
+       
+
+          
           <input
             type="text"
             className="p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100"
@@ -334,6 +355,10 @@ const groupsData = [
               }
             }}
           />
+          {loading &&
+
+          <Spinner width={16} height={10} />
+          }
         </div>
         {/* </div> */}
         <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2   rounded-md "></div>
@@ -633,6 +658,7 @@ const groupsData = [
                 <IoMdSave className="size-5 mr-1 " /> Save
               </div>
             </button>
+            {loading &&  <Spinner width={10} height={10} />}
           </div>
         </div>
       </div>
