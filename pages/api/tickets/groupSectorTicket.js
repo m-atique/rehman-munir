@@ -1,32 +1,26 @@
-import db from '../../../config/db';
 
-export default function handler(req, res) {
- const data = req.body
-  if (req.method === 'POST') {
+
+ 
+import { sql } from '@vercel/postgres';
+
+export default async function handler(request, response) {
+  const data = request.body 
+
+  if (request.method === "POST") {
     try {
-        
-       
-      const qry = `select * from ticketStock where tgroup = '${data.group}'  and sector ='${data.sector}'`;
+      console.log( `select * from ticketStock where tgroup = ${data.group}  and sector = ${data.sector}`
+    )
+      // Execute the SQL query with the gmail parameter
+      const ticket = await sql
+      `select * from ticketStock where tgroup = ${data.group}  and sector = ${data.sector}`
+      ;
 
-      db.query(qry, (err, result) => {
-        if (err) {
-          console.log("Error in getting data:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          if (result.recordset.length > 0) {
-           
-            res.status(200).json(result.recordset); // Sending user data as JSON response
-          } else {
-            console.log("Data not found");
-            res.status(404).json({ error: "Data not found" });
-          }
-        }
-      });
+      // Return the tickets data
+      return response.status(200).json(ticket.rows);
     } catch (error) {
-      console.log("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
-  }   
+    return response.status(405).json({ MESSAGE: "Method not allowed" });
+  }
 }

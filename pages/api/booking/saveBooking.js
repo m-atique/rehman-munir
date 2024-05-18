@@ -1,17 +1,11 @@
-import db from "../../../config/db";
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "50mb",
-    },
-  },
-};
-
-export default function handler(req, res) {
-  const data = req.body;
-
-  const insert_qury = `Insert into bookings 
+import { sql } from '@vercel/postgres';
+ 
+export default async function handler(request, response) {
+  const data = request.body; // Corrected: Initialize data variable
+  
+  if (request.method === "POST") {
+    try {
+      await sql`Insert into bookings 
     (
     
     date,       
@@ -28,36 +22,24 @@ export default function handler(req, res) {
     values
     ( 
        
-        '${data.date}',         
-        '${data.userId}',      
-        '${data.ticketId}', 
-        '${data.title}',         
-        '${data.name}',       
-        '${data.surName}',   
-        '${data.dob}',       
-        '${data.passport}',   
-        '${data.expiry}',   
+        ${data.date},         
+        ${data.userId},      
+        ${data.ticketId}, 
+        ${data.title},         
+        ${data.name},       
+        ${data.surName},   
+        ${data.dob},       
+        ${data.passport},   
+        ${data.expiry},   
         'Reserved' 
             
     )`;
-
-  if (req.method === "POST") {
-   
-    try {
-      db.query(insert_qury, (err) => {
-        if (err) {
-          
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          console.log("Ticket Booked successfully");
-          res.status(200).json({ message: "Ticket Booked  successfully" });
-        }
-      });
-    } catch (error) {
-      console.log("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  } else {
-    res.status(405).json({ error: "Method Not Allowed" });
+    
+    return response.status(200).json({ MESSAGE: "SAVED" }); // Corrected: "MASSAGE" changed to "MESSAGE"
+  } catch (error) {
+    return response.status(500).json({ error: error.message }); // Corrected: Use error.message
   }
+} else {
+  return response.status(405).json({ MESSAGE: "Method not allowed" }); // Corrected: 200 changed to 405 for method error
+}
 }

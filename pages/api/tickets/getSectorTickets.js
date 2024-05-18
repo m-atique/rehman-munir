@@ -1,32 +1,29 @@
-import db from '../../../config/db';
+import { sql } from '@vercel/postgres';
 
-export default function handler(req, res) {
- const data = req.body
-  if (req.method === 'POST') {
+export default async function handler(request, response) {
+  const data = request.body;
+
+  if (request.method === "POST") {
     try {
-        
-       
-      const qry = `select * from ticketStock where sector = '${data.sector}'`;
+      // // Log the intended query for debugging purposes
+      // console.log(
+      //   `select * from ticketStock where LOWER(sector) = LOWER($1)`,
+      //   `with parameter: ${data.sector}`
+      // );
 
-      db.query(qry, (err, result) => {
-        if (err) {
-          console.log("Error in getting data:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          if (result.recordset.length > 0) {
-           
-            res.status(200).json(result.recordset); // Sending user data as JSON response
-          } else {
-            console.log("Data not found");
-            res.status(404).json({ error: "Data not found" });
-          }
-        }
-      });
+      // Execute the parameterized SQL query
+      const ticket = await sql`
+        SELECT * FROM ticketStock WHERE LOWER(sector) = LOWER(${data.sector})
+      `;
+
+      // Return the tickets data
+      return response.status(200).json(ticket.rows);
     } catch (error) {
-      console.log("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      // Handle any errors
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
-  }   
+    // Handle non-POST requests
+    return response.status(405).json({ message: "Method not allowed" });
+  }
 }

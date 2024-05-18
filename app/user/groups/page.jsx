@@ -11,6 +11,7 @@ const Groups = (props) => {
  
  const grp = props.searchParams.group
 
+
   const [ticketData, setTicketData] = useState();
 
   const getTickets = async () => {
@@ -18,6 +19,8 @@ const Groups = (props) => {
       const response = await axios.get(`/api/tickets/getTickets`);
       if (response) {
         const data = response.data;
+
+        console.log("gettickets",data)
         const airlines = Array.from(new Set(data.map((item)=>item.airline)))
 
         const dataarray = airlines.map((item,index)=>{ 
@@ -32,7 +35,7 @@ const Groups = (props) => {
         }
       )
     })
-    console.log(dataarray)
+   
         setTicketData(dataarray);
       } else {
         alert("No data Found");
@@ -85,8 +88,9 @@ const Groups = (props) => {
         }
     );
       if (response) {
-        console.log("---------",response.data)
+       
         const data = response.data;
+      
         const airlines = Array.from(new Set(data.map((item)=>item.airline)))
 
         const dataarray = airlines.map((item,index)=>{ 
@@ -101,8 +105,9 @@ const Groups = (props) => {
         }
       )
     })
-  console.log("xxx-------",dataarray)
+ 
         setTicketData(dataarray);
+        
       } else {
         alert("No data Found");
       }
@@ -113,6 +118,7 @@ const Groups = (props) => {
 
   const getSectorTickets = async () => {
     try {
+      console.log("getsector",selectedSector)
       const response = await axios.post(`/api/tickets/getSectorTickets`,
       {   
              
@@ -120,7 +126,9 @@ const Groups = (props) => {
         }
     );
       if (response) {
+
         const data = response.data;
+        
         const airlines = Array.from(new Set(data.map((item)=>item.airline)))
 
         const dataarray = airlines.map((item,index)=>{ 
@@ -223,11 +231,16 @@ const Groups = (props) => {
 
                   getTickets()
                 }else if(selectedGroup != 'all' && (selectedSector == ''|| selectedSector == 'all' )){
+                  console.log(selectedGroup,selectedSector)
                    getGroupTickets(selectedGroup)
                 }
                 else if(selectedGroup != 'all' && selectedSector != 'all'){
                   getSectorTickets()
                } 
+               else if(selectedGroup == 'all' && selectedSector != 'all'){
+                getSectorTickets()
+             } 
+               
                else if(selectedGroup == '' && selectedSector == ''){
                 alert("Plz select Group and Sector")
              } 
