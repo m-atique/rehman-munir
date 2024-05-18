@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 // import axios from "axios"
 // import { domainContext } from "@/app/contexts/dataproviders"
 import { useSession } from 'next-auth/react';
+import Spinner from "@/components/ui/loading"
+
 
 import {
   DropdownMenu,
@@ -40,6 +42,7 @@ const LabelInput = (props) => {
 
 const Bookingform = (props) => {
   // const ds = useContext(domainContext).base_url
+  const [loading,setLoading]= useState(false)
   const {data} = useSession()
 
   
@@ -84,6 +87,11 @@ const Bookingform = (props) => {
   const [formData, setformData] = useState(defaults);
   const [passengers, setPassengers] = useState([]);
 
+  const getTicketInfo =async()=>{
+    const response = await axios.get(`/api/ticket/ticketbyid/${ticket.id}`)
+    console.log(response.data)
+  }
+
   const total =
     parseInt(formData.adult) + parseInt(formData.child) + parseInt(formData.infant);
 
@@ -100,7 +108,8 @@ const Bookingform = (props) => {
 
    //====================save ticket
    const saveBooking = async () => {
-    if (ticket.id && ticket.currentSeats && passengers.length > 0) {
+    setLoading(true)
+    if (ticket.id && ticket.currentseats && passengers.length > 0) {
       const savePromises = passengers.map(async (item, index) => {
         const bookingData = {
           date: today,
@@ -140,12 +149,13 @@ const Bookingform = (props) => {
           .patch(
             `/api/tickets/ticketStatus/${ticket.id}`,
   
-            {currentSeats:parseInt(ticket.totalSeats)-total}
+            {currentSeats:parseInt(ticket.totalseats)-total}
           )
 
           alert("All bookings saved successfully.");
           setPassengers([]) // Reset form or do any other necessary actions
           setformData(defaults)
+          setLoading(false)
         })
         .catch((error) => {
           // At least one save operation failed
@@ -161,6 +171,10 @@ const Bookingform = (props) => {
     <div
       className={`bg-transparent w-screen flex items-center flex-col border-0 shadow-none `}
     >
+      <div className="bg-green-400 h-100">
+
+      </div>
+    
       <div className=" h-fit py-5  flex flex-col  items-center justify-center w-full">
       <div className="bg-slate-300 w-11/12 py-2 font-bold font-mono text-xl   text-center">
         {" "}
@@ -230,10 +244,10 @@ const Bookingform = (props) => {
           
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-              {ticket.depFlyDate.split("T")[0]}
+              {ticket.depflydate.split("T")[0]}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-              {ticket.flightNo}
+              {ticket.flightno}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
                 {ticket.sector.split("-")[0]}
@@ -242,13 +256,13 @@ const Bookingform = (props) => {
               {ticket.sector.split("-")[1]}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-               {ticket.depFlyTime.split("T")[1].slice(0,5)  +"-"+ ticket.depLandTime.split("T")[1].slice(0,5)  }
+               {ticket.depflytime.slice(0,5)  +"-"+ ticket.deplandtime.slice(0,5)  }
               </td>
             </tr>
           </tbody>
         </table>
         <div className=" text-start w-11/12 font-bold italic capitalize py-1">
-       Total Avaibale Tickets: {ticket?.currentSeats}
+       Total Avaibale Tickets: {parseInt(ticket?.currentseats)-total}
         </div>
       </div>
 
@@ -262,7 +276,7 @@ const Bookingform = (props) => {
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentSeats) - parseInt(formData.child) - parseInt(formData.infant)}
+            max={parseInt(ticket.currentseats) - parseInt(formData.child) - parseInt(formData.infant)}
             // max={total}
             label="Adult"
             value={formData.adult}
@@ -272,7 +286,7 @@ const Bookingform = (props) => {
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentSeats) - parseInt(formData.adult) - parseInt(formData.infant)}
+            max={parseInt(ticket.currentseats) - parseInt(formData.adult) - parseInt(formData.infant)}
             label="Child"
             value={formData.child}
             setValue={(value) => setformData({ ...formData, child: value })}
@@ -281,7 +295,7 @@ const Bookingform = (props) => {
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentSeats) - parseInt(formData.adult) - parseInt(formData.child)}
+            max={parseInt(ticket.currentseats) - parseInt(formData.adult) - parseInt(formData.child)}
             label="Infant"
             value={formData.infant}
             setValue={(value) => setformData({ ...formData, infant: value })}
@@ -377,13 +391,17 @@ const Bookingform = (props) => {
           </div>
         ))}
         <div className="flex w-full justify-end px-3 items-end">
+          {loading &&
+        <Spinner width={10} height={10}/>
+          }
           <button
             className="bg-blue-400 p-2 rounded-lg font-bold font-mono"
             onClick={() => saveBooking
             ()}
           >
-            Confirm Booking
+            Confirm Booking 
           </button>
+
         </div>
       </div>
     </div>

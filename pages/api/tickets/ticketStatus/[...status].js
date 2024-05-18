@@ -10,7 +10,7 @@
         try {
           // Execute the SQL query with parameterized values
           await sql`UPDATE ticketStock set 
-          currentSeats = ${data.currentSeats?data.currentSeats:null}   
+          currentseats = ${data.currentSeats}   
           where id =  ${status}`;
     
           // Return a success response

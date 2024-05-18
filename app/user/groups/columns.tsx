@@ -8,6 +8,7 @@ import { MdWatchLater } from "react-icons/md";
 import Link from "next/link";
 
 export type rptCol = {
+  id:string
   depflydate:string
   arvflydate:string
   givenname:string
@@ -23,6 +24,7 @@ export type rptCol = {
   handBag:string
   meal:string
   sale:string
+  logo:string
 
   
   }
@@ -173,7 +175,9 @@ export const columns: ColumnDef<rptCol>[] = [
         enableHiding: false,
         header:"Actions",
         cell:({row})=>{
-          const currentTicket = row.original
+          const {logo,...currentTicket} = row.original
+         
+          console.log("current-----",currentTicket)
           return(
             <div>
              <Link  
