@@ -123,12 +123,12 @@ const Bookingform = (props) => {
           expiry: item.expiry,
         };
   
-        console.log("Booking Data:", bookingData);
+        // console.log("Booking Data:", bookingData);
   
         // Return a promise for each save operation
         return axios.post(`/api/booking/saveBooking`, bookingData)
           .then((response) => {
-            if (response.statusText == "OK") {
+            if (response.status == 200) {
               return `Booking saved successfully for passenger ${index + 1}`;
             } else {
               throw new Error(`Failed to save booking for passenger ${index + 1}`);
