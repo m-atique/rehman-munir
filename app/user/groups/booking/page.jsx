@@ -391,7 +391,7 @@ const Bookingform = (props) => {
           </div>
         ))}
         <div className="flex w-full justify-end px-3 items-end">
-          {loading &&
+          {loading && 
         <Spinner width={10} height={10}/>
           }
           <button
