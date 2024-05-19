@@ -14,7 +14,7 @@ import {
   import { HiHome } from "react-icons/hi2";
   import { MdOutlineLocalLibrary,MdMoveUp, MdLogout } from "react-icons/md";
   import { FaDollarSign, FaMoneyCheckDollar } from "react-icons/fa6";
-  import { TbTimelineEventPlus ,TbUser,TbCashBanknote} from "react-icons/tb";
+  import { TbTimelineEventPlus ,TbUser,TbCashBanknote, TbFileReport} from "react-icons/tb";
   import logo from '../../../public/logo.png'
 
   import Link from "next/link";
@@ -41,6 +41,7 @@ import Image from "next/image";
 
     <MenubarContent className=" rounded-none bg-white">
     <MenubarItem> <TbTimelineEventPlus className='mr-2'/><Link href ='/admin/reserve'>Reservations</Link></MenubarItem>
+    <MenubarItem> <TbFileReport className='mr-2'/><Link href ='/admin/ledger'>Ledger</Link></MenubarItem>
 
           
     </MenubarContent>

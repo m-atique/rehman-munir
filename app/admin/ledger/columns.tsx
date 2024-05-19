@@ -14,7 +14,7 @@ export type rptCol = {
   agent:string
   title:string
   name:string
-  surName:string
+  surname:string
   payment:string
   price:string
   expiry:string 

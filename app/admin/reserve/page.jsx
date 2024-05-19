@@ -38,7 +38,7 @@ const getTickets = async () => {
 
         useEffect(()=>{
             getTickets()
-        },[]) 
+        },[ledgerData]) 
         
   return (
     <div className="w-full mb-20 flex justify-center  items-center bg-gradient-to-bl from-slate-200 to-slate-200 flex-col overflow-scroll">
