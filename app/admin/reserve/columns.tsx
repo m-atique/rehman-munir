@@ -14,21 +14,23 @@ export type rptCol = {
   pnr: string;
   title: string;
   name: string;
-  surName: string;
+  surname: string;
   passport: string;
   dob: string;
   expiry: string;
   id: string;
-  ticketId:string
-  currentSeats:string
+  ticketid:string
+  currentseats:string
 };
 
 const today = new Date().toISOString().split("T")[0];
+
+
 const cancelBooking = async (id: string,ticket:string,balance:number) => {
   const booking = {
     status: "Cancel",
     date: today,
-    ticketId:ticket,
+    ticketid:ticket,
     seats:balance
   };
 
@@ -39,7 +41,7 @@ const cancelBooking = async (id: string,ticket:string,balance:number) => {
       booking
     )
     .then((response) => {
-      if (response.statusText == "OK") {
+      if (response.status == 200) {
         alert("Booking Concelled");
 
         
@@ -94,14 +96,14 @@ export const columns: ColumnDef<rptCol>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const currentTicket = row.original;
-      const ticketBalance = parseInt(row.original.currentSeats) - 1
+      const ticketBalance = parseInt(row.original.currentseats) - 1
       return (
         <div className=" flex gap-3 item-center justify-center">
           <Details ticket={currentTicket} />
           {/* <Conformation /> */}
           <button
             className=" w-1/4 text-yellow-700 hover:bg-yellow-500 flex gap-1 border-2 border-yellow-500 hover:text-white  font-semibold rounded-md p-2  shadow shadow-slate-300"
-            onClick={() => cancelBooking(row.original.id,row.original.ticketId,ticketBalance)}
+            onClick={() => cancelBooking(row.original.id,row.original.ticketid,ticketBalance)}
           >
             <RxCross1 size={20} /> Cancel{" "}
           </button>

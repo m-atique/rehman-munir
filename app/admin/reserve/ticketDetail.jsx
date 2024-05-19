@@ -83,7 +83,7 @@ const Details = (props) => {
             booking
           )
           .then((response) => {
-            if (response.statusText == "OK") {
+            if (response.status == 200) {
               alert("Booking Confirmed");
 
               reset();
@@ -181,10 +181,10 @@ const Details = (props) => {
                 <tbody>
                   <tr>
                     <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                      {ticket.depFlyDate.split("T")[0]}
+                      {ticket.depflydate.split("T")[0]}
                     </td>
                     <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                      {ticket.flightNo}
+                      {ticket.flightno}
                     </td>
                     <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
                       {ticket.sector.split("-")[0]}
@@ -193,9 +193,9 @@ const Details = (props) => {
                       {ticket.sector.split("-")[1]}
                     </td>
                     <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                      {ticket.depFlyTime.split("T")[1].slice(0, 5) +
+                      {ticket.depflytime.slice(0, 5) +
                         "-" +
-                        ticket.depLandTime.split("T")[1].slice(0, 5)}
+                        ticket.deplandtime.slice(0, 5)}
                     </td>
                   </tr>
                 </tbody>

@@ -1,56 +1,48 @@
-import db from '../../../../config/db';
+import { sql } from '@vercel/postgres';
 
+export default async function handler(req, res) {
+  const data = req.body;
+  const id = parseInt(req.query.id);
 
-export const config = {
-    api: {
-      bodyParser: {
-        sizeLimit: '50mb',
-      },
-    },
-  
-  }
-  
-export default function handler(req, res) {
-    const data = req.body;
-    const {id} = req.query
-        
-    const update_Qry = `
-    
-    BEGIN TRANSACTION;
+  if (req.method === 'PATCH') {
+    try {
+      // Begin transaction
+      await sql`BEGIN`;
 
-    update bookings set
-  
-    cancelDate = '${data.date}' ,
-    status = '${data.status}'
-    where id =  '${id}'
-    
-    UPDATE ticketStock
-    SET currentSeats = '${data.seats}'
-    WHERE id = '${data.ticketId}';
-    
-    COMMIT`
-    
-    
-    
-    
-    
-    if (req.method === 'PATCH') {
-        try {
-         
-            db.query(update_Qry, (err) => {
-                if (err) {
-                    console.log("Error in Saving:", err);
-                    res.status(500).json({ error: "Internal Server Error" });
-                } else {
-                    
-                    res.status(200).json({ message: "Booking Confirmed" });
-                }
-            });
-        } catch (error) {
-            console.log("Error:", error);
-            res.status(500).json({ error: "Internal Server Error" });
-        }
-    } else {
-        res.status(405).json({ error: "Method Not Allowed" });
+      // Update bookings with parameterized query
+      await sql`
+        UPDATE bookings
+        SET
+          canceldate = ${data.date},
+          status = ${data.status}
+        WHERE
+          id = ${id}
+      `;
+
+      // Update ticketStock with parameterized query
+      await sql`
+        UPDATE ticketStock
+        SET
+          currentseats = ${data.seats}
+        WHERE
+          id = ${data.ticketid}
+      `;
+
+      // Commit transaction
+      await sql`COMMIT`;
+
+      res.status(200).json({ message: "Booking Confirmed" });
+    } catch (error) {
+      console.error("Error:", error);
+      try {
+        // Rollback transaction on error
+        await sql`ROLLBACK`;
+      } catch (rollbackError) {
+        console.error("Rollback Error:", rollbackError);
+      }
+      res.status(500).json({ error: "Internal Server Error" });
     }
+  } else {
+    res.status(405).json({ error: "Method Not Allowed" });
+  }
 }

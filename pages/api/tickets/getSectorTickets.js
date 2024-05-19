@@ -5,11 +5,7 @@ export default async function handler(request, response) {
 
   if (request.method === "POST") {
     try {
-      // // Log the intended query for debugging purposes
-      // console.log(
-      //   `select * from ticketStock where LOWER(sector) = LOWER($1)`,
-      //   `with parameter: ${data.sector}`
-      // );
+    
 
       // Execute the parameterized SQL query
       const ticket = await sql`
