@@ -17,7 +17,8 @@ export default async function handler(request, response) {
     dob,      
     passport, 
     expiry, 
-    status  
+    status,
+    grpid
     )
     values
     ( 
@@ -31,7 +32,8 @@ export default async function handler(request, response) {
         ${data.dob},       
         ${data.passport},   
         ${data.expiry},   
-        'Reserved' 
+        'Reserved',
+        ${data.groupId} 
             
     )`;
     

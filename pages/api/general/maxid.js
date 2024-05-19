@@ -11,6 +11,7 @@ export default async function handler(request, response) {
       const lastuser = await sql`select max(id)  as maxId from users`;
       const lastticket = await sql`select max(id)  as maxId from ticketstock`;
       const lastbooking = await sql`select max(id)  as maxId from bookings`;
+      const lastgroup = await sql`select max(grpid)  as maxId from bookings`;
 
       // Return the user data
       return response.status(200).json(
@@ -18,6 +19,7 @@ export default async function handler(request, response) {
           lastuser:lastuser.rows[0].maxid,
           lastticket:lastticket.rows[0].maxid,
           lastbooking:lastbooking.rows[0].maxid,
+          lastgroup:lastgroup.rows[0].maxid
         }
       );
     } catch (error) {

@@ -120,8 +120,20 @@ const getTicketInfo =async()=>{
 
 }
 const [ticket,setTicket] = useState()
+const [maxGroupId,setmaxGroupId]= useState()
+
+//------reset 
+
+//----------------reset
+const reset = async()=>{ 
+  const response = await axios.get('/api/general/maxid')
+  const id = response.data.lastgroup
+  setmaxGroupId(id?parseInt(id)+1:1)
+
+}
  //--------------------------------------transfer details
  useEffect(() => {
+  reset()
   getTicketInfo()
   if (total == parseInt(ticket?.currentseats)) {
     // alert("Max. Avaible Tickets are ",ticket?.currentseats);
@@ -152,6 +164,7 @@ const [ticket,setTicket] = useState()
           dob: item.dob,
           passport: item.passport,
           expiry: item.expiry,
+          groupId:maxGroupId
         };
   
         // console.log("Booking Data:", bookingData);
@@ -191,10 +204,12 @@ const [ticket,setTicket] = useState()
               head:"Success",
               btntext:"OK"
         })
-         
-          setPassengers([]) // Reset form or do any other necessary actions
-          setformData(defaults)
-          setLoading(false)
+                 
+        setPassengers([]) // Reset form or do any other necessary actions
+        setformData(defaults)
+        setLoading(false)
+
+          
         })
         .catch((error) => {
           // At least one save operation failed
