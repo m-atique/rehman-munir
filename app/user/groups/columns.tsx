@@ -175,9 +175,9 @@ export const columns: ColumnDef<rptCol>[] = [
         enableHiding: false,
         header:"Actions",
         cell:({row})=>{
-          const {logo,...currentTicket} = row.original
+          // const {logo,...currentTicket} = row.original
+          const currentTicket = row.original.id
          
-          console.log("current-----",currentTicket)
           return(
             <div>
              <Link  

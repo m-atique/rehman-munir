@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 // import { domainContext } from "@/app/contexts/dataproviders"
 import { useSession } from 'next-auth/react';
 import Spinner from "@/components/ui/loading"
+import CustomAlert from '@/components/ui/customalert';
 
 
 import {
@@ -32,9 +33,10 @@ const LabelInput = (props) => {
         min={props.min}
         max={props.max}
         placeholder={props.placeholder}
-        className="p-1 border border-slate-300 pl-4 rounded-md w-full text-slate-900 bg-slate-100"
+        className=" border border-slate-300 pl-4 rounded-md w-full text-slate-900 bg-slate-100 text-lg"
         value={props.value}
         onChange={(e) => props.setValue(e.target.value)}
+        
       />
     </div>
   );
@@ -44,6 +46,17 @@ const Bookingform = (props) => {
   // const ds = useContext(domainContext).base_url
   const [loading,setLoading]= useState(false)
   const {data} = useSession()
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertprops,setAlertProps]= useState({message:"",head:"",color:"",btntext:""})
+
+  const showMessage = () => {
+    setShowAlert(true);
+  };
+
+  const closeMessage = () => {
+    setShowAlert(false);
+  };
 
   
   const today = new Date().toISOString().split("T")[0];
@@ -87,25 +100,43 @@ const Bookingform = (props) => {
   const [formData, setformData] = useState(defaults);
   const [passengers, setPassengers] = useState([]);
 
-  const getTicketInfo =async()=>{
-    const response = await axios.get(`/api/ticket/ticketbyid/${ticket.id}`)
-    console.log(response.data)
-  }
+ 
 
   const total =
     parseInt(formData.adult) + parseInt(formData.child) + parseInt(formData.infant);
 
+
   //==========================================data
 
-  //--------------------------------------transfer details
-  useEffect(() => {
-    if (total > parseInt(ticket.currentSeats)) {
-      alert("Reached Max Value");
-    }
-  }, [total]);
-  const ticket = JSON.parse(props.searchParams.currentTicket);
+ 
+  const ticketId = JSON.parse(props.searchParams.currentTicket);
+// const id = ticketId.id
+
+const getTicketInfo =async()=>{
+   
+  const response = await axios.get(`/api/tickets/ticketInfo/${ticketId}`)
+  setTicket(response.data[0])
 
 
+}
+const [ticket,setTicket] = useState()
+ //--------------------------------------transfer details
+ useEffect(() => {
+  getTicketInfo()
+  if (total == parseInt(ticket?.currentseats)) {
+    // alert("Max. Avaible Tickets are ",ticket?.currentseats);
+
+    setShowAlert(true)
+    setAlertProps(
+      { 
+        message:`Max  Avaiable Tickets are ${ticket?.currentseats}`,
+        color:"text-red-600",
+        head:"Alert",
+        btntext:"OK"
+  })
+   
+  }
+}, [total]);
    //====================save ticket
    const saveBooking = async () => {
     setLoading(true)
@@ -147,12 +178,20 @@ const Bookingform = (props) => {
 
           await axios
           .patch(
-            `/api/tickets/ticketStatus/${ticket.id}`,
+            `/api/tickets/ticketStatus/${ticketId}`,
   
-            {currentSeats:parseInt(ticket.totalseats)-total}
+            {currentSeats:parseInt(ticket.currentseats)-parseInt(total)}
           )
 
-          alert("All bookings saved successfully.");
+          setShowAlert(true)
+          setAlertProps(
+            { 
+              message:"All bookings saved successfully.",
+              color:"text-green-600",
+              head:"Success",
+              btntext:"OK"
+        })
+         
           setPassengers([]) // Reset form or do any other necessary actions
           setformData(defaults)
           setLoading(false)
@@ -168,12 +207,12 @@ const Bookingform = (props) => {
   };
   
   return (
+    
     <div
       className={`bg-transparent w-screen flex items-center flex-col border-0 shadow-none `}
     >
-      <div className="bg-green-400 h-100">
-
-      </div>
+      {ticket && 
+    
     
       <div className=" h-fit py-5  flex flex-col  items-center justify-center w-full">
       <div className="bg-slate-300 w-11/12 py-2 font-bold font-mono text-xl   text-center">
@@ -204,19 +243,19 @@ const Bookingform = (props) => {
           <tbody>
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                {ticket.sector}
+                {ticket?.sector}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                {ticket.airline}
+                {ticket?.airline}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                {parseInt(ticket.bag)}
+                {parseInt(ticket?.bag)}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-               {ticket.meal}
+               {ticket?.meal}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                {ticket.sale}
+                {ticket?.sale}
               </td>
             </tr>
           </tbody>
@@ -244,27 +283,28 @@ const Bookingform = (props) => {
           
             <tr>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-              {ticket.depflydate.split("T")[0]}
+              {ticket?.depflydate.split("T")[0]}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-              {ticket.flightno}
+              {ticket?.flightno}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-                {ticket.sector.split("-")[0]}
+                {ticket?.sector.split("-")[0]}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-              {ticket.sector.split("-")[1]}
+              {ticket?.sector.split("-")[1]}
               </td>
               <td className=" py-1 bg-slate-200 w-1/5 border border-slate-600 text-center">
-               {ticket.depflytime.slice(0,5)  +"-"+ ticket.deplandtime.slice(0,5)  }
+               {ticket?.depflytime.slice(0,5)  +"-"+ ticket?.deplandtime.slice(0,5)  }
               </td>
             </tr>
           </tbody>
         </table>
         <div className=" text-start w-11/12 font-bold italic capitalize py-1">
-       Total Avaibale Tickets: {parseInt(ticket?.currentseats)-total}
+       Total Avaibale Tickets: {parseInt(ticket?.currentseats)}
         </div>
       </div>
+      }
 
       <div className="bg-blue-400 w-11/12 py-6 font-bold font-mono text-xl rounded-md  text-center">
         {" "}
@@ -276,30 +316,30 @@ const Bookingform = (props) => {
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentseats) - parseInt(formData.child) - parseInt(formData.infant)}
+            max={parseInt(ticket?.currentseats) - parseInt(formData.child) - parseInt(formData.infant)}
             // max={total}
             label="Adult"
             value={formData.adult}
             setValue={(value) => setformData({ ...formData, adult: value })}
-          />
+            />
 
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentseats) - parseInt(formData.adult) - parseInt(formData.infant)}
+            max={parseInt(ticket?.currentseats) - parseInt(formData.adult) - parseInt(formData.infant)}
             label="Child"
             value={formData.child}
             setValue={(value) => setformData({ ...formData, child: value })}
-          />
+            />
 
           <LabelInput
             type="number"
             min={0}
-            max={parseInt(ticket.currentseats) - parseInt(formData.adult) - parseInt(formData.child)}
+            max={parseInt(ticket?.currentseats) - parseInt(formData.adult) - parseInt(formData.child)}
             label="Infant"
             value={formData.infant}
             setValue={(value) => setformData({ ...formData, infant: value })}
-          />
+            />
 
           <div className="flex flex-col items-center justify-center w-3/6 gap-1  text-pretty font-normal p-1 shadow-slate-500  ">
             <div className="flex items-start  justify-start rounded-md font-semibold  p-1 w-full sm:text-normal text-sm ">
@@ -313,14 +353,14 @@ const Bookingform = (props) => {
               className="p-1 border border-slate-300 pl-4 rounded-md w-full text-slate-900 bg-slate-100"
               value={formData.remarks}
               onChange={(e) => setformData({ ...formData, remarks: e.target.value })}
-            />
+              />
           </div>
         </div>
         <div className="flex items-center p-4 justify-end w-full">
           <button
             onClick={() => addPassengers()}
             className="bg-blue-400  p-2  w-1/6 right-0 rounded-md font-mono"
-          >
+            >
             Add Details
           </button>
         </div>
@@ -339,7 +379,7 @@ const Bookingform = (props) => {
                 setValue={(value) =>
                   handlePassengerChange(index, "givenName", value)
                 }
-              />
+                />
 
               <LabelInput
                 type="text"
@@ -349,7 +389,7 @@ const Bookingform = (props) => {
                 setValue={(value) =>
                   handlePassengerChange(index, "surName", value)
                 }
-              />
+                />
 
               <LabelInput
                 type="text"
@@ -359,7 +399,7 @@ const Bookingform = (props) => {
                 setValue={(value) =>
                   handlePassengerChange(index, "title", value)
                 }
-              />
+                />
 
               <LabelInput
                 type="text"
@@ -369,14 +409,14 @@ const Bookingform = (props) => {
                 setValue={(value) =>
                   handlePassengerChange(index, "passport", value)
                 }
-              />
+                />
 
               <LabelInput
                 type="date"
                 label="Date of Birth"
                 value={item.dob}
                 setValue={(value) => handlePassengerChange(index, "dob", value)}
-              />
+                />
 
               <LabelInput
                 type="date"
@@ -386,7 +426,7 @@ const Bookingform = (props) => {
                 setValue={(value) =>
                   handlePassengerChange(index, "expiry", value)
                 }
-              />
+                />
             </div>
           </div>
         ))}
@@ -397,13 +437,23 @@ const Bookingform = (props) => {
           <button
             className="bg-blue-400 p-2 rounded-lg font-bold font-mono"
             onClick={() => saveBooking
-            ()}
-          >
+              ()}
+              >
             Confirm Booking 
           </button>
 
         </div>
       </div>
+      {showAlert && (
+        <CustomAlert
+          // message={`Max  Avaiable Tickets are ${ticket?.currentseats}`}
+          onClose={closeMessage}
+          message={alertprops.message}
+          head={alertprops.head}
+          color={alertprops.color}
+          btn= {alertprops.btntext}
+        />
+      )}
     </div>
   );
 };
