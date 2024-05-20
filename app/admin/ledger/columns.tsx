@@ -37,7 +37,7 @@ export const columns: ColumnDef<rptCol>[] = [
  },
  {
   header:"Sur Name",
-  accessorKey:"surName"
+  accessorKey:"surname"
  },
 
 //  {
