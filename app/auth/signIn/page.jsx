@@ -9,6 +9,8 @@ import logo from '@/public/logo.png'
 import { useRouter } from 'next/navigation'
 import { User2,KeyRound } from 'lucide-react'
 import axios from 'axios'
+import Head from 'next/head'
+
 
 
 
@@ -68,6 +70,12 @@ const router = useRouter()
 
 
   return (
+<>
+    <Head>
+    <title>Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</Head>
+
     <div className="bg-[url('../public/loginbg.jpg')] brightness-105 bg-cover" >
   
     <div className=' w-3/5 flex flex-row  items-center justify-start  '>
@@ -124,6 +132,7 @@ const router = useRouter()
     
   </div>
   </div>
+  </>
   )
 }
 

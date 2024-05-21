@@ -18,10 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-    <Head>
-                <title>Sign In</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-            </Head>
+  
       <body className={inter.className}>
         <AuthProvider>
         {children}
