@@ -57,6 +57,12 @@ const getSectors = async () => {
 
 
 const getDate =async()=>{
+console.log("data", {
+      id:data.user.id,
+      date:date,
+      sector:selectedSector
+    })
+
   const response = await axios.post(`/api/userBooking/ticketbystatus/${selectedStatus}`,
     {
       id:data.user.id,

@@ -1,53 +1,43 @@
+import { sql } from '@vercel/postgres';
 
-import db from '../../../../config/db';
+export default async function handler(request, response) {
+  const status = request.query.status[0]; // Assuming id is passed as a query parameter
+  const data = request.body
 
-export default function handler(req, res) {
  
-  if (req.method === 'POST') {
+  if (request.method === "POST") {
     try {
-        const {status} = req.query
-        const data = req.body
        
-      const qry = `SELECT 
-      ts.id AS ticketId,
+      const ticket = await sql`SELECT 
+      ts.id AS "ticketId",
       ts.pnr,
       ts.airline,
       ts.sector,
-      ts.depflyDate,
-      ts.arvFlyDate,
-      SUM(CASE WHEN  DATEDIFF(YEAR,b.dob,GETDATE()) >=12 THEN 1 ELSE 0 END) AS adults,
-      SUM(CASE WHEN  DATEDIFF(YEAR,b.dob,GETDATE()) <=12 and DATEDIFF(YEAR,b.dob,GETDATE()) >=2  THEN 1 ELSE 0 END) AS children,
-      SUM(CASE WHEN DATEDIFF(YEAR,b.dob,GETDATE()) <=2  THEN 1 ELSE 0 END) AS infants
-      ,b.reserveDate,b.bookingDate,b.status
-      FROM 
+      ts.depflydate AS "depflyDate",
+      ts.arvflydate AS "arvFlyDate",
+      SUM(CASE WHEN EXTRACT(YEAR FROM AGE(b.dob)) >= 12 THEN 1 ELSE 0 END) AS adults,
+      SUM(CASE WHEN EXTRACT(YEAR FROM AGE(b.dob)) BETWEEN 2 AND 12 THEN 1 ELSE 0 END) AS children,
+      SUM(CASE WHEN EXTRACT(YEAR FROM AGE(b.dob)) < 2 THEN 1 ELSE 0 END) AS infants,
+      b.reservedate AS "reserveDate",
+      b.bookingdate AS "bookingDate",
+      b.status
+  FROM 
       bookings b
   INNER JOIN 
-      ticketStock ts ON b.ticketId = ts.id
-  where b.userId =${data.id} and ts.sector ='${data.sector}' and ts.depFlyDate = 
-  '${data.date}' and b.status = '${status}'
-  
+      ticketstock ts ON b.ticketid = ts.id
+  WHERE 
+      b.userid = ${data.id}
+      AND ts.sector = ${data.sector} 
+      AND ts.depflydate = ${data.date} 
+      AND LOWER(b.status) = LOWER(${status})
   GROUP BY 
-      ts.id, ts.pnr, ts.airline, ts.sector,b.reserveDate,b.bookingDate, ts.depflyDate,ts.arvFlyDate,b.status`;
+      ts.id, ts.pnr, ts.airline, ts.sector, ts.depflydate, ts.arvflydate, b.reservedate, b.bookingdate, b.status;`;
 
-      db.query(qry, (err, result) => {
-        if (err) {
-          console.log("Error in getting data:", err);
-          res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          if (result.recordset.length > 0) {
-           
-            res.status(200).json(result.recordset); // Sending user data as JSON response
-          } else {
-            console.log("data not found");
-            res.status(404).json({ error: "data not found" });
-          }
-        }
-      });
+      return response.status(200).json(ticket.rows);
     } catch (error) {
-      console.log("Error:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      return response.status(500).json({ error: error.message });
     }
   } else {
-    res.status(405).json({ error: "Method Not Allowed" });
-  }   
+    return response.status(405).json({ message: "Method not allowed" });
+  }
 }

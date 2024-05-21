@@ -44,13 +44,8 @@ import { sql } from '@vercel/postgres';
 export default async function handler(request, response) {
   const status = request.query.status[0]; // Assuming id is passed as a query parameter
   const data = request.body
-console.log("xx-----",status,data.startDate)
-  console.log(`select bk.*,u.name as agent,u.address,t.pnr,t.sector,t.airline,t.sale,t.bag,t.meal,t.depflydate,t.flightno,t.depflytime,t.deplandtime,t.currentseats from bookings as bk
-  inner join users as u  on  u.id = bk.userId 
-   inner join  ticketStock as t on bk.ticketId = t.id 
-   where bk.date >= '${data.startDate}'
-   and bk.date <= '${data.endDate}'
-   and  LOWER(bk.status) = LOWER(${status})`)
+
+ 
   if (request.method === "POST") {
     try {
 
