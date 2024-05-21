@@ -87,7 +87,7 @@ const router = useRouter()
     <div className =' items-start  h-full w-2/4 justify-center hidden sm:block md:hidden lg:block '>
   
      </div>
-     <div className ="sm:w-[50%] h-full pb-10 flex item-center justify-center w-full md:w-full lg:w-2/6 md:h-4/5 md:items-start  lg:h-full lg:items-start   bg-opacity-15  bg-green-400">
+     <div className ="sm:w-[50%] h-full pb-10 flex item-center justify-center w-full md:w-full lg:w-2/6 md:h-4/5 md:items-start  lg:h-full lg:items-start   bg-opacity-15 ">
       <div className='bg-slate-300 sm:w-3/4 md:w-3/6 lg:w-[85%] bg-opacity-90  h-[85%]  p-10 pt-15 flex flex-col justify-center gap-3 rounded-full border-[18px] border-white  shadow-2xl shadow-slate-500'>
 
         <div className='mb-2 pl-1'>
