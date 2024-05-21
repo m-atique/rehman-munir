@@ -87,8 +87,8 @@ const router = useRouter()
     <div className =' items-start  h-full w-2/4 justify-center hidden sm:block md:hidden lg:block '>
   
      </div>
-     <div className ="sm:w-2/6 h-full pb-10 flex item-center justify-center w-full md:w-full lg:w-2/6 md:h-4/5 md:items-start  lg:h-full lg:items-start   bg-opacity-15 ">
-      <div className='bg-slate-300 sm:w-3/4 md:w-3/6 lg:w-4/5 bg-opacity-90  h-5/6  p-10 pt-15 flex flex-col justify-center gap-3 rounded-full border-[15px] border-white  shadow-2xl shadow-slate-500'>
+     <div className ="sm:w-[50%] h-full pb-10 flex item-center justify-center w-full md:w-full lg:w-2/6 md:h-4/5 md:items-start  lg:h-full lg:items-start   bg-opacity-15  bg-green-400">
+      <div className='bg-slate-300 sm:w-3/4 md:w-3/6 lg:w-[85%] bg-opacity-90  h-[85%]  p-10 pt-15 flex flex-col justify-center gap-3 rounded-full border-[18px] border-white  shadow-2xl shadow-slate-500'>
 
         <div className='mb-2 pl-1'>
           <h1 className='text-3xl pb-5 font-extrabold text-teal-800'> Log <span className='text-orange-400'> in</span> </h1>
@@ -122,7 +122,7 @@ const router = useRouter()
       className='bg-blue-900 p-3 w-3/5 rounded-md text-white text-md font-semibold'>Sign in</button>
       </div>
       
-      <div className='mt-20 text-center'>
+      <div className='mt-10 text-center'>
         <p className ='text-center text-teal-900 font-extralight text-xs w-full italic '>Copyrights&copy;   reserved by</p>
       <p className ='text-center text-teal-900  font-extralight text-xs w-full '>  <span className='font-bold '> Rehman Munir Travels </span>  <span className='italic font-bold'> </span></p>
       <p className='text-teal-900  text-xs'>Developed by Techno Hub Faisalabad</p>
