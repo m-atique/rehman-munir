@@ -68,14 +68,16 @@ const router = useRouter()
 
 
   return (
-  
+  <div className='container'>
+
+ 
   <div className="w-screen h-screen overflow-clip flex flex-row relative  bg-slate-600 bg-blend-overlay justify-between  bg-cover bg-[url('../public/below.jpg')]">
 
 <div className=' w-full flex flex-row  items-center justify-start absolute z-50  '>
    <div className=' w-3/6 flex items-center  justify-start '>
-    <Image src={logo}  alt="logo" width={80} height ={80} className=' brightness-125 sm:w-34 sm:h-34 w-40 h-30'
+    <Image src={logo}  alt="logo" width={60} height ={60} className=' brightness-125 sm:w-26 sm:h-26 w-40 h-30'
      />
-     <h1 className='text-blue-900  w-full  sm:text-3xl font-prompt text-xs md:text-xl lg:text-[1.4rem] font-bold bg-gradient-to-r from-green-100  to-yellow-100 bg-clip-text'> Rehman Munir Travels Faisalabad<span className='block ml-20 sm:ml-1 sm:inline'></span></h1>
+     <h1 className='text-blue-900  w-full  sm:text-3xl font-prompt text-xs md:text-xl lg:text-[1.3rem] font-bold bg-gradient-to-r from-green-100  to-yellow-100 bg-clip-text'> Rehman Munir Travels Faisalabad<span className='block ml-20 sm:ml-1 sm:inline'></span></h1>
      </div>
       </div>
         
@@ -133,6 +135,7 @@ className='bg-blue-900 p-3 w-3/5 rounded-md text-white text-md font-semibold'>Si
        
         
         
+    </div>
     </div>
   )
 }
