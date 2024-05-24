@@ -31,7 +31,7 @@ import Image from "next/image";
 
 <div className="w-5/12 text-2xl font-bold text-second flex items-center ">
 <Image src={logo} alt="logo" className="w-24 h-20 mr-2" />
-{/* <h1 >Sapphire School of Learning</h1> */}
+
 </div>
 
    {/* ============first */}
@@ -57,17 +57,6 @@ import Image from "next/image";
   </MenubarMenu>
 
  
-  {/* =========================second */}
-  {/* <MenubarMenu>
-    <MenubarTrigger> <SiGoogleforms  size ={16} className='mr-2'/> Misc. Forms</MenubarTrigger>
-
-
-    <MenubarContent className=" rounded-none bg-white">
-    <MenubarItem> <TbTimelineEventPlus className='mr-2'/><Link href ='/user/form'>User Tickets Form</Link></MenubarItem>
-      
-          
-    </MenubarContent>
-  </MenubarMenu> */}
 
 
   <MenubarMenu>
@@ -82,7 +71,7 @@ import Image from "next/image";
   <MenubarMenu>
     
     <MenubarTrigger>
-      <Link href={'/'}>
+      <Link href={'/auth/signOut'}>
     <MdLogout size ={20} color={"purple"} title="Home" className='mr-2 '/>
       </Link>
     </MenubarTrigger>
