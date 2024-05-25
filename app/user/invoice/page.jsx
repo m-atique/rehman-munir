@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from 'react';
 
 const Fv = () => {
-  // const params = useSearchParams()
+  const params = useSearchParams()
 
     const componentRef = useRef();
     const handlePrint = useReactToPrint({
@@ -24,7 +24,7 @@ const Fv = () => {
     </div>
     <Suspense fallback={()=>(<>Loading......</>)}>
 
-        <Invoice ref={componentRef} />
+        <Invoice ref={componentRef} group = {params.get("group")}/>
     </Suspense>
     </div>
     </div>

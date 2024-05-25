@@ -2,9 +2,9 @@ import React, { useMemo } from 'react'
 import { useEffect, useState,useContext } from "react"
 
 import { Button } from "@/components/ui/button"
-// import axios from "axios"
-// import { domainContext } from "@/app/contexts/dataproviders"
-// import { useSession } from 'next-auth/react';
+import axios from "axios"
+
+import { useSession } from 'next-auth/react';
 import {DataTablewithFilters} from '@/components/ui/filtertable'
 
 
@@ -24,27 +24,10 @@ import { columns } from './ticketInfo_colums'
 
 
 
-const data = [
-  {
-    depDate: "2024-12-12",
-    reservedDate: "2024-12-16",
-    confirmedDate: "2024-12-16",
-    airline: "air blue",
-    sector: "JDH-PAK",
-    adult: "3",
-    child: "2",
-    infant: "1",
-    status: "Confirmed",
-
-  },
-  
-];
-
-
 
 const Bookingform = (props) => {
-// const ds = useContext(domainContext).base_url
-// const {data} = useSession()
+
+const {data} = useSession()
 const today= new Date().toISOString().split("T")[0]
 
    const defaults= useMemo(()=>({
@@ -60,30 +43,25 @@ const today= new Date().toISOString().split("T")[0]
     
      const formData= useState(defaults)
      
-      function transferOfficer(id,transferDetail,transferlog) {      
-        try {
-        axios.patch(`${ds}/web/user/transfer/${id}`, transferDetail
-        )
-        .then(() =>{ 
-     
-            alert(`---------Data Saved--------------`);
-          axios.post(`${ds}/web/user/transferlog`,transferlog)
-    
-            })}
-         catch (error) {
-          console.log(error)
-        }
-        
-      }   
+
  
-    {
+    
 
       const ticket = props.ticket
+      const [ticketdata,setTicketdata]= useState([])
         const[transferMenuState,settransferMenuState] = useState("hidden")
 //==========================================data
+const getdata = async()=>{
+ console.log({grpid:parseInt(ticket),userid:parseInt(data?.user.id)})
+  const response = await axios.post('/api/userBooking/confirmedticket',{grpid:parseInt(ticket),userid:parseInt(data?.user.id)})
 
+  setTicketdata(response.data)
+}
 //--------------------------------------transfer details
+useEffect(()=>{
+  getdata()
 
+},[])
    
         return (
           <DropdownMenu >
@@ -107,8 +85,10 @@ const today= new Date().toISOString().split("T")[0]
          
           
           <div className='flex w-full p-1'>
-            
-              <DataTablewithFilters columns={columns} data={data}/>
+            {ticketdata &&
+
+              <DataTablewithFilters columns={columns} data={ticketdata}/>
+            }
             
 
           </div>
@@ -118,7 +98,7 @@ const today= new Date().toISOString().split("T")[0]
             </DropdownMenuContent>
           </DropdownMenu>
         );
-      }
+      
 }
 
 export default Bookingform

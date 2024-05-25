@@ -10,15 +10,14 @@ import { HiTicket,HiOutlineTicket } from "react-icons/hi2";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 
 export type rptCol = {
-  airline:string
-  depDate:string
-  arrivalDate:string
-  sector:string
-  adult:string
-  child:string
-  infant:string
-  reservedDate:string
-  confirmedDate: string
+  title:string
+  name:string
+  surname:string
+  dob:string
+  expiry:string
+  passport:string
+  price:string
+
   status:string
   
   
@@ -31,93 +30,97 @@ export type rptCol = {
 
 export const columns: ColumnDef<rptCol>[] = [
   {
-    id: "airline",
+    id: "Given Name",
    
-    header:"Airline",
+    header:"Given Name",
     cell:({row})=>{
       return(
         <div>
-          <div className="text-center">{row.original.airline}</div>
+          <div className="text-center">{row.original.name}</div>
         
           </div>
       )
     } },
 
     {
-      id: "sector",
+      id: "surname",
      
-      header:"Group",
+      header:"Sur Name",
       cell:({row})=>{
         return(
           <div>
-            <div className="flex items-center gap-2 justify-center">{row.original.sector}</div>
+            <div className="flex items-center gap-2 justify-center">{row.original.surname}</div>
             </div>
         )
       } },
-  {
-    id: "date",
-   
-    header:"Dep/Arv",
-    cell:({row})=>{
-      return(
-        <div>
-          <div className="flex items-center justify-center gap-2 mb-2"><FaPlaneDeparture size={20}/>{row.original.depDate}</div>
-          <div className="flex items-center justify-center gap-2"><FaPlaneArrival size={20}/>{row.original.depDate}</div>
-        </div>
-      )
-    } },
 
  
  
     {
-      id: "adult",
+      id: "titile",
      
-      header:" Adult",
+      header:" Title",
       cell:({row})=>{
         return(
           <div>
-              <div className="flex items-center justify-arround pl-4 gap-2">{row.original.adult}</div>
+              <div className="flex items-center justify-arround pl-4 gap-2">{row.original.title}</div>
           </div>
         )
       } },
 
         {
-    id: "child",
+    id: "dob",
    
-    header:"Child",
+    header:"DOB",
     cell:({row})=>{
       return(
         <div>
-          <div className="flex items-center justify-center gap-2">{row.original.child}  </div>
+          <div className="flex items-center justify-center gap-2">{row.original.dob.split("T")[0].split("-").reverse().join("-")}  </div>
         </div>
       )
     } },
     
     {
-      id: "infant",
+      id: "doe",
      
-      header:"Infant",
+      header:"DOE",
       cell:({row})=>{
         return(
           <div>
-            <div>{row.original.infant}</div>
+            <div>{row.original.expiry.split("T")[0].split("-").reverse().join("-")}</div>
           </div>
         )
       } },
       
 
         {
-          id: "reserved",
+          id: "passport",
          
-          header:"Resv. Date",
+          header:"Passport",
           cell:({row})=>{
             return(
               <div>
-                <div>{row.original.reservedDate} </div>
+                <div>{row.original.passport} </div>
   
               </div>
             )
           } },
+         
+
+            {
+              accessorKey: "price",
+              header: ({ table })=>{
+                const result =table.getFilteredRowModel()
+                .rows.reduce((total,row)=>total+Number(row.getValue("price")),0)
+                return (
+                  <div>Fare:<span className="font-bold bg-slate-300 text-black rounded-sm px-2 block">Total : {result}</span> </div>
+                )
+                
+                },
+              
+            },
+
+
           {
             id: "confirmed",
            
@@ -125,24 +128,13 @@ export const columns: ColumnDef<rptCol>[] = [
             cell:({row})=>{
               return(
                 <div>
-                  <div>{row.original.confirmedDate} </div>
+                  <div>{row.original.status} </div>
     
                 </div>
               )
             } },
         
-            {
-              id: "status",
-             
-              header:"Status",
-              cell:({row})=>{
-                return(
-                  <div>
-                    <div>{row.original.status} </div>
-      
-                  </div>
-                )
-              } },
+           
       
       
   

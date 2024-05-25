@@ -22,6 +22,7 @@ export type rptCol = {
   reserveDate:string
   bookingDate: string
   status:string
+  grpid:string
   
   
   }
@@ -155,11 +156,21 @@ export const columns: ColumnDef<rptCol>[] = [
         cell:({row})=>{
           return(
             <div className="flex gap-3  justify-center ">
-             <Bookingform />
-             <Link href={'/user/ticket'} className="bg-white rounded-md p-1 hover:bg-blue-800 hover:text-white hover:scale-125 shadow-lg shadow-slate-500 ">
+             <Bookingform ticket = {row.original.grpid} />
+             <Link  href={{
+                    pathname: "/user/ticket",
+                    query: {
+                      group: row.original.grpid
+                    },
+                  }} className="bg-white rounded-md p-1 hover:bg-blue-800 hover:text-white hover:scale-125 shadow-lg shadow-slate-500 ">
               <HiOutlineTicket size={28} />
              </Link>
-             <Link href={'/user/invoice'} className="bg-white rounded-md p-1 hover:bg-blue-800 hover:text-white hover hover:scale-125 shadow-lg shadow-slate-500">
+             <Link   href={{
+                    pathname: "/user/invoice",
+                    query: {
+                      group: row.original.grpid
+                    },
+                  }} className="bg-white rounded-md p-1 hover:bg-blue-800 hover:text-white hover hover:scale-125 shadow-lg shadow-slate-500">
               <LiaFileInvoiceDollarSolid size={28} />
               
              </Link>

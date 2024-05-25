@@ -20,7 +20,7 @@ export default async function handler(request, response) {
       SUM(CASE WHEN EXTRACT(YEAR FROM AGE(b.dob)) < 2 THEN 1 ELSE 0 END) AS infants,
       b.reservedate AS "reserveDate",
       b.bookingdate AS "bookingDate",
-      b.status,b.groupid
+      b.status,b.grpid
   FROM 
       bookings b
   INNER JOIN 
@@ -31,7 +31,7 @@ export default async function handler(request, response) {
       AND ts.depflydate = ${data.date} 
       AND LOWER(b.status) = LOWER(${status})
   GROUP BY 
-      ts.id, ts.pnr, ts.airline, ts.sector, ts.depflydate, ts.arvflydate, b.reservedate, b.bookingdate, b.status,b.groupid;`;
+      ts.id, ts.pnr, ts.airline, ts.sector, ts.depflydate, ts.arvflydate, b.reservedate, b.bookingdate, b.status,b.grpid;`;
 
       return response.status(200).json(ticket.rows);
     } catch (error) {
