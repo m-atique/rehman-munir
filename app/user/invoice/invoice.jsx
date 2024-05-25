@@ -108,8 +108,8 @@ const getdata = async()=>{
             </div>
           <div className="flex p-5 w-full ">
             <div className="w-3/5">
-          {ticketdata &&  ticketdata.map((item)=>(
-            <div className="w-full flex flex-col  border border-black  rounded-md  bg-slate-200 p-1 mb-2">
+          {ticketdata &&  ticketdata.map((item,index)=>(
+            <div  key={index} className="w-full flex flex-col  border border-black  rounded-md  bg-slate-200 p-1 mb-2">
                <table className="w-full">
                 <thead>
                   <tr>

@@ -73,8 +73,8 @@ const getdata = async()=>{
             <div className="font-extrabold  text-lg bg-slate-200 rounded-lg px-2 w-fit py-1 ">
               Passengers Detail
             </div>
-          {ticketdata &&  ticketdata.map((item)=>(
-            <div className="w-full flex flex-col bg-slate-200 p-1 rounded-sm">
+          {ticketdata &&  ticketdata.map((item,index)=>(
+            <div key={index}  className="w-full flex flex-col bg-slate-200 p-1 rounded-sm">
                <table className="w-full">
                 <thead>
                   <tr>
