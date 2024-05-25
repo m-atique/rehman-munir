@@ -69,7 +69,7 @@ const getdata = async()=>{
             <div className=" text-green-600 flex gap-2 font-extrabold font-sans text-xl">
               <PiSealCheckFill size={30} /> Your Booking is Confirmed
             </div>
-            <div>Thanks for Booking with us.</div>
+            <div>Thanks for Booking with us</div>
             <div className="font-extrabold  text-lg bg-slate-200 rounded-lg px-2 w-fit py-1 ">
               Passengers Detail
             </div>
