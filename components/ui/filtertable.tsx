@@ -102,68 +102,13 @@ export function DataTablewithFilters<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-        {/* <Input
-          placeholder="Filter zones..."
-          value={(table.getColumn("zone")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("zone")?.setFilterValue(event.target.value)
-          }
-          className="w-3/5 placeholder-blue-600"
-        /> */}
-        {/* <Input
-          placeholder="Filter sectors..."
-          value={(table.getColumn("sector")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("sector")?.setFilterValue(event.target.value)
-          }
-          className="w-2/6 placeholder-blue-600"
-        /> */}
+      
+        
         </div>
       
      
        
-       {/* <div className="flex items-center justify-end space-x-2 py-2 ">
-       <Button
-       variant="outline"
-       size="sm"
-          onClick={() => table.setPageIndex(0)}
-          // disabled={!table.getCanPreviousPage()}
-        >
-          First
-        </Button>
-     <Button
-       variant="outline"
-       size="sm"
-       onClick={() => table.previousPage()}
-       disabled={!table.getCanPreviousPage()}
-     >
-       Previous
-     </Button>
-     <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-     <Button
-    
-       variant="outline"
-       size="sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          Last
-        </Button>
-   </div> */}
+       
    </div>
   
     <div className="rounded-md border ">
@@ -215,6 +160,7 @@ export function DataTablewithFilters<TData, TValue>({
             </TableRow>
           )}
         </TableBody>
+        
       </Table>
     </div>
   
