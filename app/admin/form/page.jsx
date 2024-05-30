@@ -14,7 +14,9 @@ import { Suspense } from "react";
 
 const LabelInput = (props) => {
   return (
-    <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400">
+    <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400" 
+    
+    >
       <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-56 w-28 sm:text-normal text-sm p-1">
         {props.label} 
        
@@ -24,6 +26,7 @@ const LabelInput = (props) => {
         className="p-1 pl-4 rounded-md w-full text-slate-900 bg-slate-100"
         value={props.value}
         onChange={(e) => props.setValue(e.target.value)}
+        
       />
     </div>
   );
@@ -61,21 +64,31 @@ const groupsData = [
       airline: "",
       logo: "",
       sector: "",
+      origin:"",
+      manzal:"",
+      stay:"",
+      stayStart:"",
+      stayEnd:"",
       group:"",
       pnr: "",
       flightNo: "",
-      depFlyDate: today,
-      depFlyTime: "12:00",
-      depLandDate: today,
-      depLandTime: "12:00",
+      depFlyDate: "",
+      depFlyTime: "",
+      depLandDate: "",
+      depLandTime: "",
 
       returnSector:"",
+      returnorigin:"",
+      returnmanzal:"",
+      returnStay:"",
+      rsStart:"",
+      rsEnd:"",
       returnFlightNo:"",
 
-      ariveFlyTime: "12:00",
-      ariveFlyDate: today,
-      ariveLandDate: today,
-      ariveLandTime: "12:00",
+      ariveFlyTime: "",
+      ariveFlyDate: "",
+      ariveLandDate: "",
+      ariveLandTime: "",
       bag: "",
       handBag: "",
       meal: "",
@@ -94,22 +107,85 @@ const groupsData = [
   const [Saving,setSaving]= useState(false)
 
   const getAirline = async () => {
-    const airlinesData = await axios.get("/api/tickets/getairline");
-    const airlines = airlinesData.data.map((item) => ({
-      value: item.airline,
-      label: item.airline,
-    }));
-    setEntryTypes(airlines);
+    try {
+      const response = await axios.get("/api/tickets/getairline");
+      const airlinesData = response.data;
+      
+      // Create a Set to store unique airline values
+      const uniqueAirlinesSet = new Set(airlinesData.map(item => item.airline));
+  
+      // Convert the Set back to an array of objects with value and label properties
+      const uniqueAirlines = Array.from(uniqueAirlinesSet).map(airline => ({
+        value: airline,
+        label: airline
+      }));
+  
+      setEntryTypes(uniqueAirlines);
+    } catch (error) {
+      console.error("Error fetching airlines data:", error);
+    }
   };
 
   const getGroups = async () => {
-    const groupData = await axios.get("/api/tickets/getGroup");
-    const group = groupData.data.map((item) => ({
-      value: item.tgroup,
-      label: item.tgroup,
-    }));
-    setGroups(group);
+    try {
+      const response = await axios.get("/api/tickets/getGroup");
+      const groupsdata = response.data;
+      
+      // Create a Set to store unique airline values
+      const uniqueGroupsSet = new Set(groupsdata.map(item => item.tgroup));
+  
+      // Convert the Set back to an array of objects with value and label properties
+      const uniqueGroups = Array.from(uniqueGroupsSet).map(tgroup => ({
+        value: tgroup,
+        label: tgroup
+      }));
+  
+      setGroups(uniqueGroups);
+    } catch (error) {
+      console.error("Error fetching airlines data:", error);
+    }
   };
+
+
+
+  const getSectors = async () => {
+    const sectorsData = await axios.get("/api/tickets/getSectors");
+
+const sectordata = sectorsData.data
+const uniquesectorsSet = new Set(sectordata.map(item => item.sector));
+  
+// Convert the Set back to an array of objects with value and label properties
+const uniqueSectors = Array.from(uniquesectorsSet).map((item) => ({
+      value: item,
+      label: item,
+    }));
+    setSectors(uniqueSectors);
+  };
+
+
+  const getreturnSectors = async () => {
+    const sectorsData = await axios.get("/api/tickets/getreturnsector");
+
+const sectordata = sectorsData.data
+const uniquesectorsSet = new Set(sectordata.map(item => item.sector));
+  
+// Convert the Set back to an array of objects with value and label properties
+const uniqueSectors = Array.from(uniquesectorsSet).map((item) => ({
+      value: item,
+      label: item,
+    }));
+    setreturnSectors(uniqueSectors);
+  };
+
+
+  // const getGroups = async () => {
+  //   const groupData = await axios.get("/api/tickets/getGroup");
+  //   const group = groupData.data.map((item) => ({
+  //     value: item.tgroup,
+  //     label: item.tgroup,
+  //   }));
+  //   setGroups(group);
+  // };
 
 
 
@@ -123,6 +199,8 @@ const groupsData = [
     setTicket({ ...defaults, srNo:parseInt(id)+1})
     // await getGroups()
     await getAirline();
+    await getSectors()
+    await getreturnSectors()
     setLoading(false)
   };
 
@@ -136,6 +214,15 @@ const groupsData = [
 
   const [groups, setGroups] = useState(groupsData);
   const [groupOpen, setGroupOpen] = useState(false);
+
+  const [sectors, setSectors] = useState();
+  const [SectorOpen, setSectorOpen] = useState(false);
+
+  const [returnsectors, setreturnSectors] = useState();
+  const [returnSectorOpen, setreturnSectorOpen] = useState(false);
+
+  const [returnOrigin, setreturnOrigin] = useState(false);
+  const [origin, setorigin] = useState(false);
 
   //====================save ticket
   const saveTickets = async () => {
@@ -315,6 +402,9 @@ const groupsData = [
     }
   };
 
+
+
+
   const handleaddButton = () => {
     ref.current.focus();
     setTypeOpen(!typeOpen);
@@ -323,6 +413,17 @@ const groupsData = [
   const handleaddButtonGroup = () => {
     ref.current.focus();
     setGroupOpen(!groupOpen);
+  };
+
+  const handleaddButtonSector = () => {
+    ref.current.focus();
+    setSectorOpen(!SectorOpen);
+    setorigin(!origin)
+  };
+  const handleaddButtonreturnSector = () => {
+    ref.current.focus();
+    setreturnSectorOpen(!returnSectorOpen);
+    setreturnOrigin(!returnOrigin)
   };
 
   return (
@@ -466,13 +567,18 @@ const groupsData = [
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md pl-1 shadow-slate-500 border border-slate-400">
+        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md pl-1 shadow-slate-500 border border-slate-400 ">
           <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-56 w-28 sm:text-normal text-sm p-1">
             Logo
           </div>
+          {Ticket.airline =="" && <div>
           <ImgPicker
             setter={(value) => setTicket({ ...Ticket, logo: value })}
-          />
+            />
+            </div>}
+            {Ticket.airline !="" && <div className="w-full">
+                Logo already in record
+            </div>}
           <div
             className="h-10 w-20 bg-cover  bg-center rounded-e-md bg-slate-300"
             style={{ backgroundImage: `url(${Ticket.logo})` }}
@@ -483,12 +589,77 @@ const groupsData = [
         <div className="w-full bg-white p-2 font-bold text-lg text-center">
           One Sided
         </div>
+
+
+        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400">
+          <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-48 w-28 sm:text-normal text-sm p-1">
+            Sector
+          </div>
+          <div className="w-full flex ">
+            <div
+              className={`border w-full  flex rounded-sm border-second items-center justify-center pr-2 `}
+            >
+              <div
+                className={`w-full ${SectorOpen == false ? "block" : "hidden"}`}
+              >
+                {sectors && (
+                  <Selector
+                    data={sectors}
+                    value={Ticket.sector}
+                    setValue={(x) => setTicket({ ...Ticket, sector: x })}
+                  />
+                )}
+              </div>
+
+              {/* entrytype input */}
+              <input
+                ref={ref}
+                type="text"
+                id="name"
+                className={`border w-full p-1 rounded-sm focus:outline-none pl-2  ${
+                  SectorOpen == false ? "hidden" : "block"
+                }`}
+                value={Ticket.sector}
+                onChange={(e) =>
+                  setTicket({ ...Ticket, sector: e.target.value })
+                }
+              />
+
+              <button
+                className="bg-slate-500 rounded-md flex items-center ml-2 text-slate-100 px-2 py-1"
+                onClick={() => handleaddButtonSector()}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2   rounded-md "></div>
+
+      {origin && 
+       
         <LabelInput
           type="text"
-          label="Sector"
-          value={Ticket.sector}
-          setValue={(value) => setTicket({ ...Ticket, sector: value })}
-        />
+          label="Origin"
+          value={Ticket.origin}
+          setValue={(value) => setTicket({ ...Ticket, origin: value })}
+          />
+        }
+         {origin  && 
+        <LabelInput
+          type="text"
+          label="Destination"
+          value={Ticket.manzal}
+          setValue={(value) => setTicket({ ...Ticket, manzal: value })}
+          
+          />
+         }
+
+
         <LabelInput
           type="text"
           label="Flight No"
@@ -523,18 +694,94 @@ const groupsData = [
           value={Ticket.depLandTime}
           setValue={(value) => setTicket({ ...Ticket, depLandTime: value })}
         />
+<LabelInput
+          type="text"
+          label="Stay At"
+          value={Ticket.stay}
+          setValue={(value) => setTicket({ ...Ticket, stay: value })}
+        />
+        
+<LabelInput
+          type="time"
+          label="Stay from"
+          value={Ticket.stayStart}
+          setValue={(value) => setTicket({ ...Ticket, stayStart: value })}
+        />
+<LabelInput
+          type="time"
+          label="Stay To "
+          value={Ticket.stayEnd}
+          setValue={(value) => setTicket({ ...Ticket, stayEnd: value })}
+        />
+
+
 
         <div className="w-full bg-white p-2 font-bold text-lg text-center">
           Retrun Detail
         </div>
 
+        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2  bg-slate-100 rounded-md shadow-md p-1 shadow-slate-500 border border-slate-400">
+          <div className="flex items-center justify-center rounded-md font-bold bg-slate-400 sm:w-48 w-28 sm:text-normal text-sm p-1">
+            Returning Sector
+          </div>
+          <div className="w-full flex ">
+            <div
+              className={`border w-full  flex rounded-sm border-second items-center justify-center pr-2 `}
+            >
+              <div
+                className={`w-full ${returnSectorOpen == false ? "block" : "hidden"}`}
+              >
+                {returnsectors && (
+                  <Selector
+                    data={returnsectors}
+                    value={Ticket.returnSector}
+                    setValue={(x) => setTicket({ ...Ticket, returnSector: x })}
+                  />
+                )}
+              </div>
+
+              {/* entrytype input */}
+              <input
+                ref={ref}
+                type="text"
+                id="name"
+                className={`border w-full p-1 rounded-sm focus:outline-none pl-2  ${
+                  returnSectorOpen == false ? "hidden" : "block"
+                }`}
+                value={Ticket.returnSector}
+                onChange={(e) =>
+                  setTicket({ ...Ticket, returnSector: e.target.value })
+                }
+              />
+
+              <button
+                className="bg-slate-500 rounded-md flex items-center ml-2 text-slate-100 px-2 py-1"
+                onClick={() => handleaddButtonreturnSector()}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-row items-center justify-center w-full  sm:w-2/5 gap-2   rounded-md "></div>
+
+        {returnOrigin && 
         <LabelInput
           type="text"
-          label="Return Sector"
-          value={Ticket.returnSector}
-          setValue={(value) => setTicket({ ...Ticket, returnSector: value })}
+          label="Return Origin"
+          value={Ticket.returnorigin}
+          setValue={(value) => setTicket({ ...Ticket, returnorigin: value })}
+        />
+}
+{returnOrigin &&
+        <LabelInput
+          type="text"
+          label=" Return Dest."
+          value={Ticket.returnmanzal}
+          setValue={(value) => setTicket({ ...Ticket, returnmanzal: value })}
         />
 
+}
         <LabelInput
           type="text"
           label=" ReturnFlight No"
@@ -569,6 +816,28 @@ const groupsData = [
           value={Ticket.ariveLandTime}
           setValue={(value) => setTicket({ ...Ticket, ariveLandTime: value })}
         />
+        <LabelInput
+          type="text"
+          label="Stay At"
+          value={Ticket.stay}
+          setValue={(value) => setTicket({ ...Ticket, stay: value })}
+        />
+      
+<LabelInput
+          type="time"
+          label="Stay from"
+          value={Ticket.stayStart}
+          setValue={(value) => setTicket({ ...Ticket, stayStart: value })}
+        />
+       
+   
+<LabelInput
+          type="time"
+          label="Stay To "
+          value={Ticket.stayEnd}
+          setValue={(value) => setTicket({ ...Ticket, stayEnd: value })}
+        />
+       
 <div className="w-full bg-white p-2 font-bold text-lg text-center">
           Other Details
         </div>
